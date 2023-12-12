@@ -1,25 +1,19 @@
-import { memo, useCallback, useState } from 'react'
+import { memo } from 'react'
 import { useSelector } from 'react-redux'
 import { Dropdown, Space } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
-import { items } from './UserProfile-config'
-import AdminPanel from '../AdminPanel'
+import { items } from './UserProfileMenu-config'
+import { Link } from 'react-router-dom'
 
 const UserProfile = ({ onLogout }) => {
   const { nickname, email, role } = useSelector((state) => state.currentUser)
-  const [showAdminPanel, setShowAdminPanel] = useState(false)
-
-  const toggleAdminPanelHandler = useCallback(() => {
-    setShowAdminPanel((visible) => !visible)
-  }, [setShowAdminPanel])
 
   let adminPanel = {}
 
   if (role === 'admin') {
     adminPanel = {
       key: '2',
-      label: 'Admin panel',
-      onClick: toggleAdminPanelHandler,
+      label: <Link to='/admin'>Admin panel</Link>,
     }
   }
 
@@ -46,11 +40,6 @@ const UserProfile = ({ onLogout }) => {
           </Space>
         </a>
       </Dropdown>
-
-      <AdminPanel
-        showAdminPanel={showAdminPanel}
-        onToggleAdminPanel={toggleAdminPanelHandler}
-      />
     </>
   )
 }

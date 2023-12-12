@@ -1,10 +1,12 @@
 import { memo, useState } from 'react'
 import { AutoComplete, Button, Checkbox, Form, Input, Select } from 'antd'
+
 import {
   countries,
   formItemLayout,
   tailFormItemLayout,
 } from './RegistrationForm-config'
+
 const { Option } = Select
 
 const RegistrationForm = ({ onRegistration }) => {

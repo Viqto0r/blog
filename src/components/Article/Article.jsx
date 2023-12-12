@@ -2,8 +2,6 @@ import { memo, createElement } from 'react'
 import { Avatar, List, Space } from 'antd'
 import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons'
 
-import styles from './Article.module.scss'
-
 const IconText = ({ icon, text }) => (
   <Space>
     {createElement(icon)}

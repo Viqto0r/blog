@@ -1,50 +1,20 @@
-import { List } from 'antd'
-import styles from './Main.module.scss'
 import React, { memo } from 'react'
-import Article from '../Article'
+import { List } from 'antd'
+import { Content } from 'antd/es/layout/layout'
 
-const data = [
-  {
-    href: 'https://ant.design',
-    title: `ant design part `,
-    avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=`,
-    description:
-      'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  },
-  {
-    href: 'https://ant.design',
-    title: `ant design part `,
-    avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=`,
-    description:
-      'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  },
-  {
-    href: 'https://ant.design',
-    title: `ant design part `,
-    avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=`,
-    description:
-      'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  },
-  {
-    href: 'https://ant.design',
-    title: `ant design part `,
-    avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=`,
-    description:
-      'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  },
-]
+import Article from '../Article/Article'
+import { data } from './Main-data'
+
+const contentStyle = {
+  textAlign: 'center',
+  minHeight: 120,
+  lineHeight: '120px',
+  color: '#fff',
+}
 
 const Main = () => {
   return (
-    <main className={styles.main}>
+    <Content style={contentStyle}>
       <List
         grid={{
           gutter: 16,
@@ -58,7 +28,7 @@ const Main = () => {
         dataSource={data}
         renderItem={(item) => <Article {...item} />}
       />
-    </main>
+    </Content>
   )
 }
 

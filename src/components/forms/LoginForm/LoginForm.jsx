@@ -1,8 +1,6 @@
+import { memo } from 'react'
 import { Button, Checkbox, Form, Input } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
-
-import styles from './LoginForm.module.scss'
-import { memo } from 'react'
 
 const LoginForm = ({ onLogin, onShowForm }) => {
   return (

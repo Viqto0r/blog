@@ -12,7 +12,6 @@ module.exports = ({ mode = DEVELOPMENT }) => {
 
   const getStyles = () => {
     const styleLoader = isProd ? MiniCssExtractPlugin.loader : 'style-loader'
-    console.log([styleLoader, 'css-loader', 'sass-loader'])
     return [styleLoader, 'css-loader', 'sass-loader']
   }
 
@@ -36,6 +35,9 @@ module.exports = ({ mode = DEVELOPMENT }) => {
     },
     devServer: {
       hot: isDev,
+      port: 3000,
+      open: true,
+      historyApiFallback: true,
     },
 
     module: {

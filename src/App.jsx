@@ -19,7 +19,7 @@ function App() {
 
   useEffect(() => {
     authHandler(newUserDataRef.current, hideFormsHandler)
-  }, [])
+  }, [authHandler, hideFormsHandler])
 
   const showFormHandler = useCallback((formType) => {
     //formType: login | registration | null - если нужно скрыть форму

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { Dropdown, Space } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { items } from './UserProfile-config'
+import AdminPanel from '../AdminPanel'
 
 const UserProfile = ({ onLogout }) => {
   const { nickname, email, role } = useSelector((state) => state.currentUser)
@@ -10,7 +11,7 @@ const UserProfile = ({ onLogout }) => {
 
   const toggleAdminPanelHandler = useCallback(() => {
     setShowAdminPanel((visible) => !visible)
-  })
+  }, [setShowAdminPanel])
 
   let adminPanel = {}
 
@@ -45,6 +46,11 @@ const UserProfile = ({ onLogout }) => {
           </Space>
         </a>
       </Dropdown>
+
+      <AdminPanel
+        showAdminPanel={showAdminPanel}
+        onToggleAdminPanel={toggleAdminPanelHandler}
+      />
     </>
   )
 }

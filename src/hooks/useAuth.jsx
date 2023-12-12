@@ -24,28 +24,28 @@ const useAuth = () => {
   const authHandler = useCallback(
     (newUserData, hideFormsHandler) =>
       onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          console.log('logout')
+          dispatch(logoutUser())
+          return
+        }
         try {
-          if (user) {
-            let userDataFromDB = await getDataFromDB('users', user.uid)
-            if (!userDataFromDB) {
-              await sendDataInDB('users', user, newUserData)
-              userDataFromDB = await getDataFromDB('users', user.uid)
-            }
-            dispatch(
-              loginUser({
-                ...userDataFromDB,
-              })
-            )
-            hideFormsHandler(null)
-          } else {
-            console.log('logout')
-            dispatch(logoutUser())
+          let userDataFromDB = await getDataFromDB('users', user.uid)
+          if (!userDataFromDB) {
+            await sendDataInDB('users', user, newUserData)
+            userDataFromDB = await getDataFromDB('users', user.uid)
           }
+          dispatch(
+            loginUser({
+              ...userDataFromDB,
+            })
+          )
+          hideFormsHandler(null)
         } catch (e) {
           console.log('Ошибка аутентификации')
         }
       }),
-    []
+    [dispatch]
   )
 
   return {

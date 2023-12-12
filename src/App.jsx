@@ -1,18 +1,5 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
-import UserPage from './pages/UserPage/UserPage'
-import AdminPage from './pages/AdminPage/AdminPage'
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <UserPage />,
-  },
-  {
-    path: 'admin',
-    element: <AdminPage />,
-  },
-])
+import { RouterProvider } from 'react-router-dom'
+import router from './routes/router'
 
 function App() {
   return <RouterProvider router={router} />

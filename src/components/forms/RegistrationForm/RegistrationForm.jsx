@@ -6,33 +6,41 @@ import {
   formItemLayout,
   tailFormItemLayout,
 } from './RegistrationForm-config'
+import { createUserFB } from '../../../api/firebaseApi'
 
 const { Option } = Select
 
-const RegistrationForm = ({ onRegistration }) => {
+const RegistrationForm = ({ onHideForms }) => {
   const [form] = Form.useForm()
+  console.log('render RegistrationForm')
 
-  const [autoCompleteResult, setAutoCompleteResult] = useState([])
-  const onWebsiteChange = (value) => {
-    if (!value) {
-      setAutoCompleteResult([])
-    } else {
-      setAutoCompleteResult(
-        ['.com', '.org', '.net'].map((domain) => `${value}${domain}`)
-      )
-    }
+  //const [autoCompleteResult, setAutoCompleteResult] = useState([])
+  //const onWebsiteChange = (value) => {
+  //  if (!value) {
+  //    setAutoCompleteResult([])
+  //  } else {
+  //    setAutoCompleteResult(
+  //      ['.com', '.org', '.net'].map((domain) => `${value}${domain}`)
+  //    )
+  //  }
+  //}
+  //const websiteOptions = autoCompleteResult.map((website) => ({
+  //  label: website,
+  //  value: website,
+  //}))
+
+  const submitHandler = async (userData) => {
+    await createUserFB(userData)
+    onHideForms()
   }
-  const websiteOptions = autoCompleteResult.map((website) => ({
-    label: website,
-    value: website,
-  }))
 
   return (
     <Form
       {...formItemLayout}
       form={form}
       name='register'
-      onFinish={onRegistration}
+      onFinish={submitHandler}
+      onCancel={onHideForms}
       initialValues={{
         prefix: '7',
       }}
@@ -176,8 +184,8 @@ const RegistrationForm = ({ onRegistration }) => {
 
       <Form.Item name='website' label='Website'>
         <AutoComplete
-          options={websiteOptions}
-          onChange={onWebsiteChange}
+          //options={websiteOptions}
+          //onChange={onWebsiteChange}
           placeholder='website'
         >
           <Input />

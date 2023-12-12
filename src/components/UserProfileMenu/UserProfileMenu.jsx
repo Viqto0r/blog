@@ -4,8 +4,9 @@ import { Dropdown, Space } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { items } from './UserProfileMenu-config'
 import { Link } from 'react-router-dom'
+import { logoutFB } from '../../api/firebaseApi'
 
-const UserProfile = ({ onLogout }) => {
+const UserProfile = () => {
   const { nickname, email, role } = useSelector((state) => state.currentUser)
 
   let adminPanel = {}
@@ -28,7 +29,7 @@ const UserProfile = ({ onLogout }) => {
               key: '3',
               danger: true,
               label: 'Logout',
-              onClick: onLogout,
+              onClick: logoutFB,
             },
           ],
         }}

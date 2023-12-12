@@ -30,46 +30,62 @@ export const auth = getAuth()
 const db = getFirestore(firebaseApp)
 
 export const sendDataInDB = async (key, user, userData) => {
+  console.log(userData)
   try {
-    await setDoc(doc(db, key, user.uid), userData)
+    return await setDoc(doc(db, key, user.uid), userData)
   } catch (e) {
     console.error('Error adding document: ', e)
+    return false
   }
 }
 
 export const getDataFromDB = async (key, id) => {
   const docRef = doc(db, key, id)
-  const docSnap = await getDoc(docRef)
-
-  if (docSnap.exists()) {
+  try {
+    const docSnap = await getDoc(docRef)
+    if (!docSnap.exists()) {
+      throw new Error('Данные пользователя не найдены')
+    }
     return docSnap.data()
-  } else {
-    console.log('No such document!')
+  } catch (e) {
+    console.log(e)
     return false
   }
 }
 
-export const loginFB = async (userEmail, userPassword) => {
+export const loginFB = async ({ email, password }) => {
   try {
-    await signInWithEmailAndPassword(auth, userEmail, userPassword)
+    return await signInWithEmailAndPassword(auth, email, password)
   } catch (e) {
     console.log('Ошибка логина', e)
+    return false
   }
 }
 
 export const logoutFB = async () => {
   try {
-    await signOut(auth)
+    return await signOut(auth)
   } catch (e) {
     console.log('Ошибка логаута', e)
+    return false
   }
 }
 
-export const createUserFB = async (email, password) => {
+const filterUserData = ({ agreement, confirm, ...rest }) => rest
+
+export const createUserFB = async (userData) => {
+  const filteredUserData = filterUserData(userData)
+
   try {
-    await createUserWithEmailAndPassword(auth, email, password)
+    const { user } = await createUserWithEmailAndPassword(
+      auth,
+      userData.email,
+      userData.password
+    )
+    return await sendDataInDB('users', user, filteredUserData)
   } catch (e) {
     console.log('Ошибка создания пользователя')
+    return false
   }
 }
 
@@ -86,6 +102,7 @@ export const getCollectionFromDB = async (collectionName) => {
     return allData
   } catch (e) {
     console.log('Ошибка получения коллекции данных', e)
+    return false
   }
 }
 
@@ -93,7 +110,9 @@ export const deleteUserFromDB = async (user) => {
   try {
     await deleteUser(user)
     console.log(`Пользователь ${user} удален`)
+    return true
   } catch (e) {
     console.log(`Ошибка удаления пользователя ${user}`, e)
+    return false
   }
 }

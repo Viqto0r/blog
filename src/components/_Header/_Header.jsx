@@ -22,7 +22,7 @@ const _Header = ({ loggined = false, onShowForm, onLogout }) => {
     <Header style={headerStyle}>
       <Logo />
       {loggined ? (
-        <UserProfileMenu onLogout={onLogout} />
+        <UserProfileMenu />
       ) : (
         <LoginBtn showLoginForm={() => onShowForm('login')} />
       )}

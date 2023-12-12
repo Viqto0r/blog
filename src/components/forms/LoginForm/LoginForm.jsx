@@ -1,8 +1,15 @@
 import { memo } from 'react'
 import { Button, Checkbox, Form, Input } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
+import { loginFB } from '../../../api/firebaseApi'
 
-const LoginForm = ({ onLogin, onShowForm }) => {
+const LoginForm = ({ onShowForm, onHideForms }) => {
+  console.log('Render LoginForm')
+  const submitHandler = async (userData) => {
+    await loginFB(userData)
+    onHideForms()
+  }
+
   return (
     <Form
       name='normal_login'
@@ -10,7 +17,7 @@ const LoginForm = ({ onLogin, onShowForm }) => {
       initialValues={{
         remember: true,
       }}
-      onFinish={onLogin}
+      onFinish={submitHandler}
     >
       <Form.Item
         name='email'

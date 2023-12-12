@@ -6,25 +6,19 @@ import RegistrationForm from '../forms/RegistrationForm/RegistrationForm'
 
 import { capitalize } from '../../utils/utils'
 
-const _Modal = ({
-  showForm,
-  showFormHandler,
-  hideFormsHandler,
-  loginHandler,
-  registrationHandler,
-}) => {
+const _Modal = ({ showForm, showFormHandler, onHideForms }) => {
   return (
     <Modal
       title={capitalize(showForm)}
       open={showForm !== null}
-      onCancel={hideFormsHandler}
+      onCancel={onHideForms}
       footer={null}
     >
       {showForm === 'login' && (
-        <LoginForm onLogin={loginHandler} onShowForm={showFormHandler} />
+        <LoginForm onShowForm={showFormHandler} onHideForms={onHideForms} />
       )}
       {showForm === 'registration' && (
-        <RegistrationForm onRegistration={registrationHandler} />
+        <RegistrationForm onHideForms={onHideForms} />
       )}
     </Modal>
   )

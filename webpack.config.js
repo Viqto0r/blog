@@ -3,25 +3,39 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const path = require('path')
 
-const PRODUCTION = 'production'
 const DEVELOPMENT = 'development'
-const SRC_DIR = path.resolve(__dirname, 'src')
+const PRODUCTION = 'production'
 
 module.exports = ({ mode = DEVELOPMENT }) => {
+  const isDev = mode === DEVELOPMENT
+  const isProd = mode === PRODUCTION
+
+  const getStyles = () => {
+    const styleLoader = isProd ? MiniCssExtractPlugin.loader : 'style-loader'
+    console.log([styleLoader, 'css-loader', 'sass-loader'])
+    return [styleLoader, 'css-loader', 'sass-loader']
+  }
+
+  const getFileName = (ext) => {
+    return `[name]${isDev ? '[hash:8]' : ''}-build.${ext}`
+  }
+
   return {
-    mode: 'development',
+    mode,
     entry: `/src/main.jsx`,
-    devtool: 'source-map',
+    devtool: isDev ? 'source-map' : false,
 
     output: {
-      filename: '[name][fullhash:8]-build.js',
+      filename: getFileName('js'),
       path: path.resolve(__dirname, './dist'),
       clean: true,
     },
     resolve: {
-      modules: ['../node_modules'],
+      modules: ['node_modules'],
       extensions: ['.js', '.jsx'],
-      //modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+    },
+    devServer: {
+      hot: isDev,
     },
 
     module: {
@@ -47,14 +61,20 @@ module.exports = ({ mode = DEVELOPMENT }) => {
         },
         {
           test: /\.s?[ac]ss$/i,
-          use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+          use: getStyles(),
         },
       ],
     },
     plugins: [
-      new HtmlWebpackPlugin({ template: 'public/index.html' }),
+      new HtmlWebpackPlugin({
+        template: 'public/index.html',
+        minify: {
+          removeComments: isProd,
+          collapseWhitespace: isProd,
+        },
+      }),
       new MiniCssExtractPlugin({
-        filename: 'main-[hash:8].css',
+        filename: getFileName('css'),
       }),
     ],
   }

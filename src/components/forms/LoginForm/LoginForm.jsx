@@ -1,12 +1,16 @@
 import { memo } from 'react'
 import { Button, Checkbox, Form, Input } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
-import { loginFB } from '../../../api/firebaseApi'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../../../store/slices/authSlice'
 
 const LoginForm = ({ onShowForm, onHideForms }) => {
-  console.log('Render LoginForm')
+  const dispatch = useDispatch()
+  const { isLoading } = useSelector((state) => state.authData)
+
   const submitHandler = async (userData) => {
-    await loginFB(userData)
+    console.log('login click')
+    await dispatch(login(userData)).unwrap()
     onHideForms()
   }
 
@@ -61,7 +65,7 @@ const LoginForm = ({ onShowForm, onHideForms }) => {
       </Form.Item>
 
       <Form.Item>
-        <Button type='primary' htmlType='submit' className='login-form-button'>
+        <Button type='primary' htmlType='submit' loading={isLoading}>
           Log in
         </Button>
         Or <a onClick={() => onShowForm('registration')}>register now!</a>

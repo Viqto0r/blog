@@ -6,12 +6,16 @@ import {
   formItemLayout,
   tailFormItemLayout,
 } from './RegistrationForm-config'
-import { createUserFB } from '../../../api/firebaseApi'
+import { useDispatch, useSelector } from 'react-redux'
+import { registerUser } from '../../../store/slices/authSlice'
 
 const { Option } = Select
 
 const RegistrationForm = ({ onHideForms }) => {
   const [form] = Form.useForm()
+  const { isLoading } = useSelector((state) => state.authData)
+
+  const dispatch = useDispatch()
   console.log('render RegistrationForm')
 
   //const [autoCompleteResult, setAutoCompleteResult] = useState([])
@@ -30,7 +34,8 @@ const RegistrationForm = ({ onHideForms }) => {
   //}))
 
   const submitHandler = async (userData) => {
-    await createUserFB(userData)
+    await dispatch(registerUser(userData)).unwrap()
+    //await createUserFB(userData)
     onHideForms()
   }
 
@@ -214,7 +219,7 @@ const RegistrationForm = ({ onHideForms }) => {
         </Checkbox>
       </Form.Item>
       <Form.Item {...tailFormItemLayout}>
-        <Button type='primary' htmlType='submit'>
+        <Button type='primary' htmlType='submit' loading={isLoading}>
           Register
         </Button>
       </Form.Item>

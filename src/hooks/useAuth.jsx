@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
-import { auth, getDataFromDB } from '../api/firebaseApi'
-import { loginUser, logoutUser } from '../store/slices/currentUserSlice'
+import { auth } from '../api/firebaseApi'
+import { getCurrentUser } from '../store/slices/authSlice'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useCallback } from 'react'
 
@@ -11,20 +11,15 @@ const useAuth = () => {
     onAuthStateChanged(auth, async (user) => {
       console.log('Юзер заходит')
       if (!user) {
-        console.log('logout')
-        dispatch(logoutUser())
+        console.log('Юзер не авторизован')
         return false
       }
-      try {
-        const userDataFromDB = await getDataFromDB('users', user.uid)
-        dispatch(loginUser({ ...userDataFromDB }))
-        return true
-      } catch (e) {
-        console.log('Ошибка аутентификации')
-        return false
-      }
+      console.log('Установка данных юзера в стейт')
+      dispatch(getCurrentUser({ key: 'users', id: user.uid }))
+      console.log('Юзер авторизован, данные в стейт установлены')
+      return user
     }),
-      [dispatch, logoutUser, loginUser]
+      [dispatch, getCurrentUser]
   })
 
   return {

@@ -4,6 +4,8 @@ import { Header } from 'antd/es/layout/layout'
 import Logo from '../Logo/Logo'
 import LoginBtn from './LoginBtn/LoginBtn'
 import UserProfileMenu from '../UserProfileMenu/UserProfileMenu'
+import { Spin } from 'antd'
+import { useSelector } from 'react-redux'
 
 const headerStyle = {
   textAlign: 'center',
@@ -17,15 +19,23 @@ const headerStyle = {
   backgroundColor: '#FFFFFF',
 }
 
-const _Header = ({ loggined = false, onShowForm, onLogout }) => {
+const _Header = ({ onShowForm }) => {
+  const {
+    isLoading,
+    currentUser: { role },
+  } = useSelector((state) => state.authData)
+
+  const userProfileBtn =
+    role === 'guest' ? (
+      <LoginBtn showLoginForm={() => onShowForm('login')} />
+    ) : (
+      <UserProfileMenu />
+    )
+
   return (
     <Header style={headerStyle}>
       <Logo />
-      {loggined ? (
-        <UserProfileMenu />
-      ) : (
-        <LoginBtn showLoginForm={() => onShowForm('login')} />
-      )}
+      {isLoading ? <Spin /> : userProfileBtn}
     </Header>
   )
 }

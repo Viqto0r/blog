@@ -1,13 +1,20 @@
 import { memo } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Dropdown, Space } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { items } from './UserProfileMenu-config'
 import { Link } from 'react-router-dom'
-import { logoutFB } from '../../api/firebaseApi'
+import { logout } from '../../store/slices/authSlice'
 
-const UserProfile = () => {
-  const { nickname, email, role } = useSelector((state) => state.currentUser)
+const UserProfileMenu = () => {
+  const dispatch = useDispatch()
+  const { nickname, email, role } = useSelector(
+    (state) => state.authData.currentUser
+  )
+
+  const logoutHandler = async () => {
+    dispatch(logout())
+  }
 
   let adminPanel = {}
 
@@ -29,7 +36,7 @@ const UserProfile = () => {
               key: '3',
               danger: true,
               label: 'Logout',
-              onClick: logoutFB,
+              onClick: logoutHandler,
             },
           ],
         }}
@@ -45,4 +52,4 @@ const UserProfile = () => {
   )
 }
 
-export default memo(UserProfile)
+export default memo(UserProfileMenu)

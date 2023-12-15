@@ -1,6 +1,5 @@
 import { memo, useEffect, useState } from 'react'
 import { Layout } from 'antd'
-import { useSelector } from 'react-redux'
 
 import useAuth from '../../hooks/useAuth'
 
@@ -17,7 +16,6 @@ const layoutStyle = {
 
 const UserPage = () => {
   const [showForm, setShowForm] = useState(null)
-  const currentUser = useSelector((state) => state.currentUser)
   const { authHandler } = useAuth()
 
   useEffect(() => {
@@ -31,10 +29,7 @@ const UserPage = () => {
   return (
     <>
       <Layout style={layoutStyle}>
-        <_Header
-          onShowForm={showFormHandler}
-          loggined={currentUser.role !== 'guest'}
-        />
+        <_Header onShowForm={showFormHandler} />
         <Layout>
           <Sidebar />
           <Main />

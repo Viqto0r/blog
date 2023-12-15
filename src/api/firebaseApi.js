@@ -27,67 +27,69 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig)
 export const auth = getAuth()
-const db = getFirestore(firebaseApp)
+export const db = getFirestore(firebaseApp)
 
-export const sendDataInDB = async (key, user, userData) => {
-  console.log(userData)
-  try {
-    return await setDoc(doc(db, key, user.uid), userData)
-  } catch (e) {
-    console.error('Error adding document: ', e)
-    return false
-  }
-}
+// Переписать логику на создание юзера в async thunk
 
-export const getDataFromDB = async (key, id) => {
-  const docRef = doc(db, key, id)
-  try {
-    const docSnap = await getDoc(docRef)
-    if (!docSnap.exists()) {
-      throw new Error('Данные пользователя не найдены')
-    }
-    return docSnap.data()
-  } catch (e) {
-    console.log(e)
-    return false
-  }
-}
+//const sendDataInDB = async (key, user, userData) => {
+//  console.log(userData)
+//  try {
+//    return await setDoc(doc(db, key, user.uid), userData)
+//  } catch (e) {
+//    console.error('Error adding document: ', e)
+//    return false
+//  }
+//}
 
-export const loginFB = async ({ email, password }) => {
-  try {
-    return await signInWithEmailAndPassword(auth, email, password)
-  } catch (e) {
-    console.log('Ошибка логина', e)
-    return false
-  }
-}
+//export const getDataFromDB = async (key, id) => {
+//  const docRef = doc(db, key, id)
+//  try {
+//    const docSnap = await getDoc(docRef)
+//    if (!docSnap.exists()) {
+//      throw new Error('Данные пользователя не найдены')
+//    }
+//    return docSnap.data()
+//  } catch (e) {
+//    console.log(e)
+//    return false
+//  }
+//}
 
-export const logoutFB = async () => {
-  try {
-    return await signOut(auth)
-  } catch (e) {
-    console.log('Ошибка логаута', e)
-    return false
-  }
-}
+//export const loginFB = async ({ email, password }) => {
+//  try {
+//    return await signInWithEmailAndPassword(auth, email, password)
+//  } catch (e) {
+//    console.log('Ошибка логина', e)
+//    return false
+//  }
+//}
 
-const filterUserData = ({ agreement, confirm, ...rest }) => rest
+//export const logoutFB = async () => {
+//  try {
+//    return await signOut(auth)
+//  } catch (e) {
+//    console.log('Ошибка логаута', e)
+//    return false
+//  }
+//}
 
-export const createUserFB = async (userData) => {
-  const filteredUserData = filterUserData(userData)
+//const filterUserData = ({ agreement, confirm, ...rest }) => rest
 
-  try {
-    const { user } = await createUserWithEmailAndPassword(
-      auth,
-      userData.email,
-      userData.password
-    )
-    return await sendDataInDB('users', user, filteredUserData)
-  } catch (e) {
-    console.log('Ошибка создания пользователя')
-    return false
-  }
-}
+//export const createUserFB = async (userData) => {
+//  const filteredUserData = filterUserData(userData)
+
+//  try {
+//    const { user } = await createUserWithEmailAndPassword(
+//      auth,
+//      userData.email,
+//      userData.password
+//    )
+//    return await sendDataInDB('users', user, filteredUserData)
+//  } catch (e) {
+//    console.log('Ошибка создания пользователя')
+//    return false
+//  }
+//}
 
 export const getCollectionFromDB = async (collectionName) => {
   try {

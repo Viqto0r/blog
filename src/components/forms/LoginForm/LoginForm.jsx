@@ -1,18 +1,43 @@
-import { memo } from 'react'
-import { Button, Checkbox, Form, Input } from 'antd'
+import { memo, useCallback } from 'react'
+import { Button, Checkbox, Form } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from 'react-hook-form'
+
+import ErrorMessage from '../ErrorMessage/ErrorMessage'
+import _Input from '../../forms/_Input/_Input'
+
+import { emailPattern } from '../validationPatterns'
 import { login } from '../../../store/slices/authSlice'
 
 const LoginForm = ({ onShowForm, onHideForms }) => {
   const dispatch = useDispatch()
   const { isLoading } = useSelector((state) => state.authData)
+  const {
+    handleSubmit,
+    control,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm({ mode: 'onBlur' })
 
   const submitHandler = async (userData) => {
-    console.log('login click')
-    await dispatch(login(userData)).unwrap()
-    onHideForms()
+    try {
+      await dispatch(login(userData)).unwrap()
+      onHideForms()
+    } catch (e) {
+      setError('authError', {
+        type: 'auth error',
+        message: 'Invalid login or password',
+      })
+    }
   }
+
+  const clearErrorHandler = useCallback(() => {
+    if (errors.authError) {
+      clearErrors('authError')
+    }
+  }, [errors.authError])
 
   return (
     <Form
@@ -21,47 +46,45 @@ const LoginForm = ({ onShowForm, onHideForms }) => {
       initialValues={{
         remember: true,
       }}
-      onFinish={submitHandler}
+      onFinish={handleSubmit(submitHandler)}
     >
-      <Form.Item
+      <_Input
         name='email'
-        rules={[
-          {
-            type: 'email',
-            message: 'The input is not valid E-mail!',
-          },
-          {
-            required: true,
-            message: 'Please input your E-mail!',
-          },
-        ]}
-      >
-        <Input prefix={<MailOutlined />} placeholder='Email' />
-      </Form.Item>
-      <Form.Item
+        control={control}
+        error={errors.email}
+        errorMessage='Invalid email'
+        status={(errors.email || errors.authError) && 'error'}
+        rules={{
+          required: true,
+          pattern: emailPattern,
+          validate: { notEmpty: (e) => e !== undefined },
+        }}
+        prefix={<MailOutlined />}
+        placeholder={'Email'}
+        onFocus={clearErrorHandler}
+      />
+      <_Input
+        control={control}
+        type='password'
         name='password'
-        rules={[
-          {
-            required: true,
-            message: 'Please input your Password!',
-          },
-          { min: 6, message: 'Password must be minimum 6 characters.' },
-        ]}
-      >
-        <Input
-          prefix={<LockOutlined className='site-form-item-icon' />}
-          type='password'
-          placeholder='Password'
-        />
-      </Form.Item>
+        error={errors.password}
+        errorMessage='Enter your password'
+        status={(errors.password || errors.authError) && 'error'}
+        rules={{
+          required: true,
+          validate: { notEmpty: (e) => e !== undefined },
+        }}
+        prefix={<LockOutlined className='site-form-item-icon' />}
+        placeholder={'Password'}
+        onFocus={clearErrorHandler}
+      />
+
+      <ErrorMessage errorMessage={errors.authError?.message} />
+
       <Form.Item>
         <Form.Item name='remember' valuePropName='checked' noStyle>
           <Checkbox>Remember me</Checkbox>
         </Form.Item>
-
-        {/*<a className='login-form-forgot' href=''>
-          Forgot password
-        </a>*/}
       </Form.Item>
 
       <Form.Item>

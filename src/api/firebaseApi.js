@@ -1,19 +1,6 @@
 import { initializeApp } from 'firebase/app'
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  deleteUser,
-} from 'firebase/auth'
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  getFirestore,
-  setDoc,
-} from 'firebase/firestore'
+import { getAuth, deleteUser } from 'firebase/auth'
+import { collection, getDocs, getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDCtk805Xq9C83daYZABmCPbKgi4D-8Plg',

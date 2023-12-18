@@ -1,3 +1,5 @@
+const getOption = (label) => ({ value: label, label })
+
 export const formItemLayout = {
   labelCol: {
     xs: {
@@ -267,4 +269,6 @@ export const countries = [
   'Yemen',
   'Zambia',
   'Zimbabwe',
-].map((country) => ({ value: country, label: country }))
+].map(getOption)
+
+export const genders = ['Male', 'Female'].map(getOption)

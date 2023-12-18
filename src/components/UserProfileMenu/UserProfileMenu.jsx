@@ -5,12 +5,11 @@ import { DownOutlined } from '@ant-design/icons'
 import { items } from './UserProfileMenu-config'
 import { Link } from 'react-router-dom'
 import { logout } from '../../store/slices/authSlice'
+import { convertEmailToNickname } from '../../utils/utils'
 
 const UserProfileMenu = () => {
   const dispatch = useDispatch()
-  const { nickname, email, role } = useSelector(
-    (state) => state.authData.currentUser
-  )
+  const { email, role } = useSelector((state) => state.authData.currentUser)
 
   const logoutHandler = async () => {
     dispatch(logout())
@@ -43,7 +42,7 @@ const UserProfileMenu = () => {
       >
         <a onClick={(e) => e.preventDefault()} style={{ cursor: 'pointer' }}>
           <Space>
-            {nickname || email}
+            {convertEmailToNickname(email)}
             <DownOutlined />
           </Space>
         </a>

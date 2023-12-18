@@ -1,50 +1,59 @@
-import { memo, useState } from 'react'
-import { AutoComplete, Button, Checkbox, Form, Input, Select } from 'antd'
+import { memo, useCallback } from 'react'
+import { Button, Form } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from 'react-hook-form'
 
+import _Input from '../_Input/_Input'
+import _Select from '../_Select/_Select'
+import _Checkbox from '../_Checkbox/_Checkbox'
+import useEmailError from '../../../hooks/useEmailError'
+
+import { registerUser } from '../../../store/slices/authSlice'
 import {
   countries,
   formItemLayout,
+  genders,
   tailFormItemLayout,
 } from './RegistrationForm-config'
-import { useDispatch, useSelector } from 'react-redux'
-import { registerUser } from '../../../store/slices/authSlice'
-
-const { Option } = Select
+import { emailPattern, passwordPattern } from '../validationPatterns'
 
 const RegistrationForm = ({ onHideForms }) => {
-  const [form] = Form.useForm()
-  const { isLoading } = useSelector((state) => state.authData)
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm({ mode: 'onBlur' })
 
   const dispatch = useDispatch()
-  console.log('render RegistrationForm')
+  const { isLoading } = useSelector((state) => state.authData)
+  const emailError = useEmailError(errors)
 
-  //const [autoCompleteResult, setAutoCompleteResult] = useState([])
-  //const onWebsiteChange = (value) => {
-  //  if (!value) {
-  //    setAutoCompleteResult([])
-  //  } else {
-  //    setAutoCompleteResult(
-  //      ['.com', '.org', '.net'].map((domain) => `${value}${domain}`)
-  //    )
-  //  }
-  //}
-  //const websiteOptions = autoCompleteResult.map((website) => ({
-  //  label: website,
-  //  value: website,
-  //}))
+  const clearErrorHandler = useCallback(() => {
+    if (errors.regError) {
+      clearErrors('regError')
+    }
+  }, [errors.regError])
 
   const submitHandler = async (userData) => {
-    await dispatch(registerUser(userData)).unwrap()
-    //await createUserFB(userData)
-    onHideForms()
+    try {
+      await dispatch(registerUser(userData)).unwrap()
+      onHideForms()
+    } catch (e) {
+      setError('regError', {
+        type: 'regError',
+        message: 'Email already in use',
+      })
+    }
   }
 
   return (
     <Form
       {...formItemLayout}
-      form={form}
       name='register'
-      onFinish={submitHandler}
+      onFinish={handleSubmit(submitHandler)}
       onCancel={onHideForms}
       initialValues={{
         prefix: '7',
@@ -54,170 +63,109 @@ const RegistrationForm = ({ onHideForms }) => {
       }}
       scrollToFirstError
     >
-      <Form.Item
-        name='nickname'
-        label='Nickname'
-        tooltip='What do you want others to call you?'
-        rules={[
-          {
-            required: true,
-            message: 'Please input your nickname!',
-            whitespace: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
+      <_Input
         name='email'
-        label='E-mail'
-        rules={[
-          {
-            type: 'email',
-            message: 'The input is not valid E-mail!',
-          },
-          {
-            required: true,
-            message: 'Please input your E-mail!',
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
+        control={control}
+        error={emailError.error}
+        errorMessage={emailError.errorMessage}
+        status={emailError.status}
+        label='Email'
+        onFocus={clearErrorHandler}
+        rules={{
+          required: true,
+          pattern: emailPattern,
+          validate: { notEmpty: (e) => e !== undefined },
+        }}
+        placeholder={'Email'}
+      />
 
-      <Form.Item
+      <_Input
+        control={control}
+        type='password'
         name='password'
         label='Password'
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
-        hasFeedback
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item
+        error={errors.password}
+        errorMessage='Password must contain minimum 6 characters, at least one
+                uppercase letter, one lowercase letter and one number.'
+        status={errors.password && 'error'}
+        rules={{
+          required: true,
+          pattern: passwordPattern,
+          validate: { notEmpty: (e) => e !== undefined },
+        }}
+        placeholder={'Password'}
+      />
+      <_Input
+        control={control}
+        type='password'
         name='confirm'
-        label='Confirm Password'
-        dependencies={['password']}
-        hasFeedback
-        rules={[
-          {
-            required: true,
-            message: 'Please confirm your password!',
+        label='Password'
+        error={errors.confirm}
+        errorMessage='Passwords mismatch'
+        rules={{
+          required: true,
+          validate: {
+            match: (e) => e === getValues('password'),
           },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve()
-              }
-              return Promise.reject(
-                new Error('The new password that you entered do not match!')
-              )
-            },
-          }),
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item
+        }}
+        placeholder={'Confirm password'}
+      />
+      <_Select
+        control={control}
         name='gender'
+        error={errors.gender}
+        errorMessage='Please select gender'
         label='Gender'
-        rules={[
-          {
-            required: true,
-            message: 'Please select gender!',
+        options={genders}
+        rules={{
+          required: true,
+          validate: {
+            match: (e) => e === getValues('gender'),
           },
-        ]}
-      >
-        <Select placeholder='select your gender'>
-          <Option value='male'>Male</Option>
-          <Option value='female'>Female</Option>
-        </Select>
-      </Form.Item>
-
-      <Form.Item
+        }}
+      />
+      <_Select
+        control={control}
         name='country'
         label='Country'
-        rules={[
-          {
-            required: true,
-            message: 'Please select your country!',
-          },
-        ]}
-      >
-        <Select
-          showSearch
-          style={{
-            width: 200,
-          }}
-          placeholder='Search to Select'
-          optionFilterProp='children'
-          filterOption={(input, option) =>
-            (option?.label ?? '').includes(input)
-          }
-          filterSort={(optionA, optionB) =>
-            (optionA?.label ?? '')
-              .toLowerCase()
-              .localeCompare((optionB?.label ?? '').toLowerCase())
-          }
-          options={countries}
-        />
-      </Form.Item>
-
-      <Form.Item
+        error={errors.country}
+        errorMessage='Please select your country!'
+        options={countries}
+        showSearch={true}
+        placeholder='Search your country'
+        styles={{ width: 200 }}
+        rules={{
+          required: true,
+          validate: { notEmpty: (e) => e !== undefined },
+        }}
+      />
+      <_Input
+        type='number'
         name='phone'
-        label='Phone Number'
-        rules={[
-          {
-            required: true,
-            message: 'Please input your phone number!',
-          },
-        ]}
-      >
-        <Input
-          addonBefore={<Form.Item noStyle>+7</Form.Item>}
-          style={{
-            width: '100%',
-          }}
-        />
-      </Form.Item>
+        control={control}
+        error={errors.phone}
+        errorMessage='Invalid phone'
+        label='Phone'
+        rules={{
+          required: true,
+          pattern: /\d{10}/,
+          validate: { notEmpty: (e) => e !== undefined },
+        }}
+        placeholder={'Phone'}
+        addonTextBefore='+7'
+      />
+      <_Input name='website' label='Website' control={control} />
+      <_Input name='intro' label='Intro' control={control} />
 
-      <Form.Item name='website' label='Website'>
-        <AutoComplete
-          //options={websiteOptions}
-          //onChange={onWebsiteChange}
-          placeholder='website'
-        >
-          <Input />
-        </AutoComplete>
-      </Form.Item>
-
-      <Form.Item name='intro' label='Intro'>
-        <Input.TextArea showCount maxLength={100} />
-      </Form.Item>
-
-      <Form.Item
+      <_Checkbox
+        control={control}
         name='agreement'
-        valuePropName='checked'
-        rules={[
-          {
-            validator: (_, value) =>
-              value
-                ? Promise.resolve()
-                : Promise.reject(new Error('Should accept agreement')),
-          },
-        ]}
-        {...tailFormItemLayout}
-      >
-        <Checkbox>
-          I have read the <a href=''>agreement</a>
-        </Checkbox>
-      </Form.Item>
+        error={errors.agreement}
+        errorMessage='Should accept agreement'
+        rules={{
+          required: true,
+        }}
+      />
       <Form.Item {...tailFormItemLayout}>
         <Button type='primary' htmlType='submit' loading={isLoading}>
           Register

@@ -6,9 +6,10 @@ import {
   faMicrochip,
   faPersonBiking,
   faShirt,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons'
 
-export const data = [
+export const userPageMenuOptions = [
   {
     key: 1,
     icon: <FontAwesomeIcon icon={faMicrochip} />,
@@ -38,5 +39,13 @@ export const data = [
     key: 6,
     icon: <FontAwesomeIcon icon={faPersonBiking} />,
     label: 'Sport',
+  },
+]
+
+export const adminPageMenuOptions = [
+  {
+    key: 1,
+    icon: <FontAwesomeIcon icon={faUsers} />,
+    label: 'Users',
   },
 ]

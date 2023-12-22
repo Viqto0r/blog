@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authData from './slices/authSlice'
-import allUsersInDB from './slices/allUsersInDBSlice'
+import usersData from './slices/usersSlice'
 
 export const store = configureStore({
   reducer: {
     authData,
-    allUsersInDB,
+    usersData,
   },
 })

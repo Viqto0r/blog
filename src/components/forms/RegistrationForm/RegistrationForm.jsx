@@ -39,7 +39,7 @@ const RegistrationForm = ({ onHideForms }) => {
 
   const submitHandler = async (userData) => {
     try {
-      await dispatch(registerUser(userData)).unwrap()
+      await dispatch(registerUser({ ...userData, role: 'user' })).unwrap()
       onHideForms()
     } catch (e) {
       setError('regError', {
@@ -90,7 +90,7 @@ const RegistrationForm = ({ onHideForms }) => {
         status={errors.password && 'error'}
         rules={{
           required: true,
-          pattern: passwordPattern,
+          //pattern: passwordPattern,
           validate: { notEmpty: (e) => e !== undefined },
         }}
         placeholder={'Password'}

@@ -74,7 +74,7 @@ export const authSlice = createSlice({
   initialState,
   reducers: {},
 
-  extraReducers: (builder) => {
+  extraReducers(builder) {
     builder
       .addCase(login.pending, fetchStartHandler)
       .addCase(login.rejected, errorHandler)
@@ -105,7 +105,5 @@ export const authSlice = createSlice({
       })
   },
 })
-
-export const { showSpinner, hideSpinner } = authSlice.actions
 
 export default authSlice.reducer

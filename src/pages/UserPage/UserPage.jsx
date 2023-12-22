@@ -1,13 +1,15 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useState } from 'react'
 import { Layout } from 'antd'
 
-import useAuth from '../../hooks/useAuth'
-
-import Main from '../../components/Main/Main'
 import _Header from '../../components/_Header/_Header'
-import _Footer from '../../components/_Footer/_Footer'
+import UserPageHeader from '../../components/_Header/UserPageHeader/UserPageHeader'
 import Sidebar from '../../components/Sidebar/Sidebar'
+import Main from '../../components/Main/Main'
+import UserPageMain from '../../components/Main/UserPageMain/UserPageMain'
+import _Footer from '../../components/_Footer/_Footer'
 import _Modal from '../../components/_Modal/_Modal'
+
+import { userPageMenuOptions } from '../../components/Sidebar/Sidebar-config'
 
 const layoutStyle = {
   overflow: 'hidden',
@@ -16,11 +18,6 @@ const layoutStyle = {
 
 const UserPage = () => {
   const [showForm, setShowForm] = useState(null)
-  const { authHandler } = useAuth()
-
-  useEffect(() => {
-    authHandler()
-  }, [])
 
   //formType: login | registration | null - если нужно скрыть форму
   const showFormHandler = (formType) => setShowForm(formType)
@@ -29,10 +26,14 @@ const UserPage = () => {
   return (
     <>
       <Layout style={layoutStyle}>
-        <_Header onShowForm={showFormHandler} />
+        <_Header>
+          <UserPageHeader onShowForm={showFormHandler} />
+        </_Header>
         <Layout>
-          <Sidebar />
-          <Main />
+          <Sidebar menuOptions={userPageMenuOptions} />
+          <Main>
+            <UserPageMain />
+          </Main>
         </Layout>
         <_Footer />
       </Layout>

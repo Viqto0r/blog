@@ -16,69 +16,7 @@ const firebaseApp = initializeApp(firebaseConfig)
 export const auth = getAuth()
 export const db = getFirestore(firebaseApp)
 
-// Переписать логику на создание юзера в async thunk
-
-//const sendDataInDB = async (key, user, userData) => {
-//  console.log(userData)
-//  try {
-//    return await setDoc(doc(db, key, user.uid), userData)
-//  } catch (e) {
-//    console.error('Error adding document: ', e)
-//    return false
-//  }
-//}
-
-//export const getDataFromDB = async (key, id) => {
-//  const docRef = doc(db, key, id)
-//  try {
-//    const docSnap = await getDoc(docRef)
-//    if (!docSnap.exists()) {
-//      throw new Error('Данные пользователя не найдены')
-//    }
-//    return docSnap.data()
-//  } catch (e) {
-//    console.log(e)
-//    return false
-//  }
-//}
-
-//export const loginFB = async ({ email, password }) => {
-//  try {
-//    return await signInWithEmailAndPassword(auth, email, password)
-//  } catch (e) {
-//    console.log('Ошибка логина', e)
-//    return false
-//  }
-//}
-
-//export const logoutFB = async () => {
-//  try {
-//    return await signOut(auth)
-//  } catch (e) {
-//    console.log('Ошибка логаута', e)
-//    return false
-//  }
-//}
-
-//const filterUserData = ({ agreement, confirm, ...rest }) => rest
-
-//export const createUserFB = async (userData) => {
-//  const filteredUserData = filterUserData(userData)
-
-//  try {
-//    const { user } = await createUserWithEmailAndPassword(
-//      auth,
-//      userData.email,
-//      userData.password
-//    )
-//    return await sendDataInDB('users', user, filteredUserData)
-//  } catch (e) {
-//    console.log('Ошибка создания пользователя')
-//    return false
-//  }
-//}
-
-export const getCollectionFromDB = async (collectionName) => {
+export const getCollection = async (collectionName) => {
   try {
     const querySnapshot = await getDocs(collection(db, collectionName))
     const allData = []

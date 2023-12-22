@@ -22,7 +22,7 @@ const AdminPage = () => {
     isLoading,
   } = useSelector((state) => state.authData)
 
-  if (isLoading) return <Spin />
+  if (isLoading) return <Spin fullscreen />
 
   if (role !== 'admin') return <h1>Page Not found</h1>
   return (

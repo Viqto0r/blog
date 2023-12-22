@@ -15,10 +15,10 @@ const UserProfileMenu = () => {
     dispatch(logout())
   }
 
-  let adminPanel = {}
+  let adminPanelBtn = {}
 
   if (role === 'admin') {
-    adminPanel = {
+    adminPanelBtn = {
       key: '2',
       label: <Link to='/admin'>Admin panel</Link>,
     }
@@ -30,7 +30,7 @@ const UserProfileMenu = () => {
         menu={{
           items: [
             ...items,
-            adminPanel,
+            adminPanelBtn,
             {
               key: '3',
               danger: true,

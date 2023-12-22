@@ -7,12 +7,11 @@ import useAuth from './hooks/useAuth'
 
 function App() {
   const { authHandler, loading } = useAuth()
-  console.log(loading)
   useEffect(() => {
     authHandler()
   }, [])
 
-  return loading ? <Spin /> : <RouterProvider router={router} />
+  return loading ? <Spin fullscreen /> : <RouterProvider router={router} />
 }
 
 export default App

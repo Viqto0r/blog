@@ -5,11 +5,12 @@ import { getAllUsers } from '../../store/slices/usersSlice'
 import useTableColumns from '../../hooks/useTableColumns'
 
 const usersDataToTable = (users) => {
-  return users.map(({ uid, role, email }, idx) => ({
+  return users.map(({ uid, role, email, banned }, idx) => ({
     key: idx,
     uid,
     role,
     email,
+    banned,
   }))
 }
 

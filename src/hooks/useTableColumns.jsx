@@ -1,10 +1,12 @@
-import { Dropdown, Space } from 'antd'
+import { Dropdown, Space, Tag } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
 import useTableSearch from './useTableSearch'
 import { useDispatch } from 'react-redux'
-import { changeUserRole, deleteUser } from '../store/slices/usersSlice'
+import { changeUserData, deleteUser } from '../store/slices/usersSlice'
 
-const renderHeader = ({ uid }, dispatch) => {
+const renderHeader = ({ uid, banned }, dispatch) => {
+  console.log(uid)
+  console.log(banned)
   return [
     {
       key: '1',
@@ -13,17 +15,20 @@ const renderHeader = ({ uid }, dispatch) => {
         {
           key: '1-1',
           label: 'user',
-          onClick: () => dispatch(changeUserRole({ uid, role: 'user' })),
+          onClick: () =>
+            dispatch(changeUserData({ uid, key: 'role', value: 'user' })),
         },
         {
           key: '1-2',
           label: 'editor',
-          onClick: () => dispatch(changeUserRole({ uid, role: 'editor' })),
+          onClick: () =>
+            dispatch(changeUserData({ uid, key: 'role', value: 'editor' })),
         },
         {
           key: '1-3',
           label: 'admin',
-          onClick: () => dispatch(changeUserRole({ uid, role: 'admin' })),
+          onClick: () =>
+            dispatch(changeUserData({ uid, key: 'role', value: 'admin' })),
         },
         ,
       ],
@@ -31,8 +36,9 @@ const renderHeader = ({ uid }, dispatch) => {
     ,
     {
       key: '2',
-      label: 'Ban',
-      onClick: () => console.log('Ban'),
+      label: banned ? 'Unban' : 'Ban',
+      onClick: () =>
+        dispatch(changeUserData({ uid, key: 'banned', value: !banned })),
     },
     {
       key: '3',
@@ -51,6 +57,14 @@ const useTableColumns = () => {
       title: 'UID',
       dataIndex: 'uid',
       key: 'uid',
+      render: (_, { uid, banned }) => {
+        return (
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            {uid}
+            {banned && <Tag color='red'>banned</Tag>}
+          </div>
+        )
+      },
     },
     {
       title: 'Role',
@@ -82,6 +96,7 @@ const useTableColumns = () => {
       key: 'email',
       ...getColumnSearchProps('email'),
     },
+
     {
       title: 'Settings',
       dataIndex: 'settings',

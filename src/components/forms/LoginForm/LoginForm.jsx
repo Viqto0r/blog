@@ -9,6 +9,7 @@ import _Input from '../../forms/_Input/_Input'
 
 import { emailPattern } from '../validationPatterns'
 import { login } from '../../../store/slices/authSlice'
+import { BannedError } from '../../../utils/errors'
 
 const LoginForm = ({ onShowForm, onHideForms }) => {
   const dispatch = useDispatch()
@@ -26,9 +27,15 @@ const LoginForm = ({ onShowForm, onHideForms }) => {
       await dispatch(login(userData)).unwrap()
       onHideForms()
     } catch (e) {
+      let message = 'Invalid login or password'
+
+      if (e.name === 'BannedError') {
+        message = e.message
+      }
+
       setError('authError', {
         type: 'auth error',
-        message: 'Invalid login or password',
+        message,
       })
     }
   }

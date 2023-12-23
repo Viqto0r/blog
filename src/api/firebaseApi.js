@@ -7,6 +7,7 @@ import {
   getDocs,
   getFirestore,
 } from 'firebase/firestore'
+import { BannedError } from '../utils/errors'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDCtk805Xq9C83daYZABmCPbKgi4D-8Plg',
@@ -38,7 +39,14 @@ export const getUserByUid = async (uid) => {
   const docRef = doc(db, 'users', uid)
   const docSnap = await getDoc(docRef)
   if (!docSnap.exists()) {
-    throw new Error('Пользователь не найдет')
+    throw new Error('User is not found')
   }
-  return docSnap.data()
+
+  const user = docSnap.data()
+
+  if (user.banned) {
+    throw new BannedError('User was banned')
+  }
+
+  return user
 }

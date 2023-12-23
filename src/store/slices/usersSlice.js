@@ -6,15 +6,15 @@ export const getAllUsers = createAsyncThunk('users/getAllUsers', () =>
   getCollection('users')
 )
 
-export const changeUserRole = createAsyncThunk(
-  'users/changeUserRole',
-  async ({ uid, role }) => {
+export const changeUserData = createAsyncThunk(
+  'users/changeUserData',
+  async ({ uid, key, value }) => {
     const docRef = doc(db, 'users', uid)
-
-    await updateDoc(docRef, { role })
+    const newData = { [key]: value }
+    await updateDoc(docRef, newData)
 
     const docSnap = await getDoc(docRef)
-    return docSnap.data()
+    return { user: docSnap.data(), newData }
   }
 )
 
@@ -62,17 +62,17 @@ export const usersSlice = createSlice({
       })
 
     builder
-      .addCase(changeUserRole.pending, fetchStartHandler)
-      .addCase(changeUserRole.rejected, errorHandler)
-      .addCase(changeUserRole.fulfilled, (state, { payload }) => {
-        state.isLoading = false
-        state.users = state.users.map((user) => {
-          if (user.email === payload.email) {
-            user.role = payload.role
-          }
-          return user
-        })
-      })
+      .addCase(changeUserData.pending, fetchStartHandler)
+      .addCase(changeUserData.rejected, errorHandler)
+      .addCase(
+        changeUserData.fulfilled,
+        (state, { payload: { user, newData } }) => {
+          state.isLoading = false
+          state.users = state.users.map((u) => {
+            return u.email === user.email ? { ...u, ...newData } : u
+          })
+        }
+      )
 
     builder
       .addCase(deleteUser.pending, fetchStartHandler)

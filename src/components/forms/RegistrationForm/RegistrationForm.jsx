@@ -39,7 +39,9 @@ const RegistrationForm = ({ onHideForms }) => {
 
   const submitHandler = async (userData) => {
     try {
-      await dispatch(registerUser({ ...userData, role: 'user' })).unwrap()
+      await dispatch(
+        registerUser({ ...userData, role: 'user', banned: false })
+      ).unwrap()
       onHideForms()
     } catch (e) {
       setError('regError', {

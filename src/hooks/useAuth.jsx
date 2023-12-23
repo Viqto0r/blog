@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { auth } from '../api/firebaseApi'
 import { getCurrentUser } from '../store/slices/authSlice'
 import { onAuthStateChanged } from 'firebase/auth'
@@ -17,7 +17,7 @@ const useAuth = () => {
         return false
       }
       console.log('Установка данных юзера в стейт')
-      dispatch(getCurrentUser({ key: 'users', id: user.uid }))
+      dispatch(getCurrentUser(user.uid))
       console.log('Юзер авторизован, данные в стейт установлены')
       setLoading(false)
       return user

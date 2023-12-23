@@ -1,6 +1,12 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth, deleteUser } from 'firebase/auth'
-import { collection, getDocs, getFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+} from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDCtk805Xq9C83daYZABmCPbKgi4D-8Plg',
@@ -17,29 +23,22 @@ export const auth = getAuth()
 export const db = getFirestore(firebaseApp)
 
 export const getCollection = async (collectionName) => {
-  try {
-    const querySnapshot = await getDocs(collection(db, collectionName))
-    const allData = []
+  const querySnapshot = await getDocs(collection(db, collectionName))
+  const allData = []
 
-    querySnapshot.forEach((doc) => {
-      const data = { uid: doc.id, ...doc.data() }
-      allData.push(data)
-    })
+  querySnapshot.forEach((doc) => {
+    const data = { uid: doc.id, ...doc.data() }
+    allData.push(data)
+  })
 
-    return allData
-  } catch (e) {
-    console.log('Ошибка получения коллекции данных', e)
-    return false
-  }
+  return allData
 }
 
-export const deleteUserFromDB = async (user) => {
-  try {
-    await deleteUser(user)
-    console.log(`Пользователь ${user} удален`)
-    return true
-  } catch (e) {
-    console.log(`Ошибка удаления пользователя ${user}`, e)
-    return false
+export const getUserByUid = async (uid) => {
+  const docRef = doc(db, 'users', uid)
+  const docSnap = await getDoc(docRef)
+  if (!docSnap.exists()) {
+    throw new Error('Пользователь не найдет')
   }
+  return docSnap.data()
 }

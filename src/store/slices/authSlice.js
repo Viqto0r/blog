@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { auth, db } from '../../api/firebaseApi'
+import { auth, db, getUserByUid } from '../../api/firebaseApi'
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -20,7 +20,8 @@ const initialState = {
 export const login = createAsyncThunk(
   'currentUser/login',
   async ({ email, password }) => {
-    await signInWithEmailAndPassword(auth, email, password)
+    const { user } = await signInWithEmailAndPassword(auth, email, password)
+    await getUserByUid(user.uid)
   }
 )
 
@@ -46,15 +47,7 @@ export const registerUser = createAsyncThunk(
 
 export const getCurrentUser = createAsyncThunk(
   'currentUser/getCurrentUser',
-  async ({ key, id }) => {
-    const docRef = doc(db, key, id)
-    const docSnap = await getDoc(docRef)
-
-    if (!docSnap.exists()) {
-      throw new Error('Данные пользователя не найдены')
-    }
-    return docSnap.data()
-  }
+  async (uid) => await getUserByUid(uid)
 )
 
 const fetchStartHandler = (state) => {

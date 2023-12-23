@@ -1,10 +1,11 @@
 import { Dropdown, Space } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
 import useTableSearch from './useTableSearch'
+import { useDispatch } from 'react-redux'
+import { changeUserRole, deleteUser } from '../store/slices/usersSlice'
 
-const useTableColumns = () => {
-  const { getColumnSearchProps } = useTableSearch()
-  const tableHeader = [
+const renderHeader = ({ uid }, dispatch) => {
+  return [
     {
       key: '1',
       label: 'Change role',
@@ -12,17 +13,17 @@ const useTableColumns = () => {
         {
           key: '1-1',
           label: 'user',
-          onClick: () => console.log('click 1-1'),
+          onClick: () => dispatch(changeUserRole({ uid, role: 'user' })),
         },
         {
           key: '1-2',
           label: 'editor',
-          onClick: () => console.log('click 1-2'),
+          onClick: () => dispatch(changeUserRole({ uid, role: 'editor' })),
         },
         {
           key: '1-3',
           label: 'admin',
-          onClick: () => console.log('click 1-3'),
+          onClick: () => dispatch(changeUserRole({ uid, role: 'admin' })),
         },
         ,
       ],
@@ -31,14 +32,19 @@ const useTableColumns = () => {
     {
       key: '2',
       label: 'Ban',
-      onClick: () => console.log('click 2'),
+      onClick: () => console.log('Ban'),
     },
     {
       key: '3',
       label: 'Delete',
-      onClick: () => console.log('click 3'),
+      onClick: () => dispatch(deleteUser(uid)),
     },
   ]
+}
+
+const useTableColumns = () => {
+  const { getColumnSearchProps } = useTableSearch()
+  const dispatch = useDispatch()
 
   const columns = [
     {
@@ -80,20 +86,23 @@ const useTableColumns = () => {
       title: 'Settings',
       dataIndex: 'settings',
       key: 'settings',
-      render: () => (
-        <Space size='middle'>
-          <Dropdown
-            trigger='click'
-            menu={{
-              items: tableHeader,
-            }}
-          >
-            <a>
-              <SettingOutlined />
-            </a>
-          </Dropdown>
-        </Space>
-      ),
+
+      render: (_, rowData) => {
+        return (
+          <Space size='middle'>
+            <Dropdown
+              trigger='click'
+              menu={{
+                items: renderHeader(rowData, dispatch),
+              }}
+            >
+              <a>
+                <SettingOutlined />
+              </a>
+            </Dropdown>
+          </Space>
+        )
+      },
     },
   ]
   return columns

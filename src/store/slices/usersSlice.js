@@ -1,9 +1,29 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getCollection } from '../../api/firebaseApi'
+import { db, getCollection } from '../../api/firebaseApi'
+import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
 
-export const getAllUsers = createAsyncThunk('users/registerUser', () =>
+export const getAllUsers = createAsyncThunk('users/getAllUsers', () =>
   getCollection('users')
 )
+
+export const changeUserRole = createAsyncThunk(
+  'users/changeUserRole',
+  async ({ uid, role }) => {
+    const docRef = doc(db, 'users', uid)
+
+    await updateDoc(docRef, { role })
+
+    const docSnap = await getDoc(docRef)
+    return docSnap.data()
+  }
+)
+
+export const deleteUser = createAsyncThunk('users/deleteUser', async (uid) => {
+  const docRef = doc(db, 'users', uid)
+  await deleteDoc(docRef)
+
+  return uid
+})
 
 const fetchStartHandler = (state) => {
   state.isLoading = true
@@ -37,9 +57,30 @@ export const usersSlice = createSlice({
       .addCase(getAllUsers.pending, fetchStartHandler)
       .addCase(getAllUsers.rejected, errorHandler)
       .addCase(getAllUsers.fulfilled, (state, { payload }) => {
-        console.log(payload)
         state.isLoading = false
         state.users = payload
+      })
+
+    builder
+      .addCase(changeUserRole.pending, fetchStartHandler)
+      .addCase(changeUserRole.rejected, errorHandler)
+      .addCase(changeUserRole.fulfilled, (state, { payload }) => {
+        state.isLoading = false
+        state.users = state.users.map((user) => {
+          if (user.email === payload.email) {
+            user.role = payload.role
+          }
+          return user
+        })
+      })
+
+    builder
+      .addCase(deleteUser.pending, fetchStartHandler)
+      .addCase(deleteUser.rejected, errorHandler)
+      .addCase(deleteUser.fulfilled, (state, { payload }) => {
+        state.isLoading = false
+
+        state.users = state.users.filter((user) => user.uid !== payload)
       })
   },
 })

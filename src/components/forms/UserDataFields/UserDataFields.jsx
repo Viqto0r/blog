@@ -3,7 +3,25 @@ import _Select from '../_Select/_Select'
 import { countries, genders } from './UserDataFields-config'
 import { passwordPattern } from '../validationPatterns'
 
-const UserDataForm = ({ control, errors, getValues, errorMessages }) => {
+const UserDataForm = ({
+  control,
+  errors,
+  getValues,
+  errorMessages,
+  requiredPasswords = true,
+}) => {
+  const validatePassword = requiredPasswords
+    ? {
+        notEmpty: (e) => e !== undefined,
+        uniqPass: (e) => e !== getValues('oldPassword'),
+      }
+    : null
+  const validateConfirm = requiredPasswords
+    ? {
+        match: (e) => e === getValues('password'),
+      }
+    : null
+
   return (
     <>
       <_Input
@@ -15,12 +33,9 @@ const UserDataForm = ({ control, errors, getValues, errorMessages }) => {
         errorMessage={errorMessages.password}
         status={errors.password && 'error'}
         rules={{
-          required: true,
+          required: requiredPasswords,
           //pattern: passwordPattern,
-          validate: {
-            notEmpty: (e) => e !== undefined,
-            uniqPass: (e) => e !== getValues('oldPassword'),
-          },
+          validate: validatePassword,
         }}
         placeholder={'Password'}
       />
@@ -32,7 +47,7 @@ const UserDataForm = ({ control, errors, getValues, errorMessages }) => {
         error={errors.confirm}
         errorMessage='Passwords mismatch'
         rules={{
-          required: true,
+          required: requiredPasswords,
           validate: {
             match: (e) => e === getValues('password'),
           },
@@ -48,9 +63,7 @@ const UserDataForm = ({ control, errors, getValues, errorMessages }) => {
         options={genders}
         rules={{
           required: true,
-          validate: {
-            match: (e) => e === getValues('gender'),
-          },
+          validate: { notEmpty: (e) => e !== undefined },
         }}
       />
       <_Select

@@ -8,7 +8,7 @@ import {
 import { doc, setDoc } from 'firebase/firestore'
 
 const initialState = {
-  currentUser: {
+  userData: {
     email: null,
     role: 'guest',
   },
@@ -62,12 +62,12 @@ const errorHandler = (state, { error }) => {
   state.errorMessage = error.message
 }
 
-export const authSlice = createSlice({
+export const currentUserSlice = createSlice({
   name: 'currentUser',
   initialState,
   reducers: {
     changeCurrentUserData: (state, { payload }) => {
-      state.currentUser = { ...state.currentUser, ...payload }
+      state.userData = { ...state.userData, ...payload }
     },
   },
 
@@ -91,7 +91,7 @@ export const authSlice = createSlice({
       .addCase(getCurrentUser.rejected, errorHandler)
       .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
         state.isLoading = false
-        state.currentUser = payload
+        state.userData = payload
       })
 
     builder
@@ -102,6 +102,6 @@ export const authSlice = createSlice({
       })
   },
 })
-export const { changeCurrentUserData } = authSlice.actions
+export const { changeCurrentUserData } = currentUserSlice.actions
 
-export default authSlice.reducer
+export default currentUserSlice.reducer

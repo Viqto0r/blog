@@ -18,9 +18,9 @@ const layoutStyle = {
 
 const AdminPage = () => {
   const {
-    currentUser: { role },
+    userData: { role },
     isLoading,
-  } = useSelector((state) => state.authData)
+  } = useSelector((state) => state.currentUser)
 
   if (isLoading) return <Spin fullscreen />
 

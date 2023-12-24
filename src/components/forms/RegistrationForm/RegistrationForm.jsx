@@ -8,7 +8,7 @@ import _Select from '../_Select/_Select'
 import _Checkbox from '../_Checkbox/_Checkbox'
 import useEmailError from '../../../hooks/useEmailError'
 
-import { registerUser } from '../../../store/slices/authSlice'
+import { registerUser } from '../../../store/slices/currentUserSlice'
 import {
   formItemLayout,
   tailFormItemLayout,
@@ -27,7 +27,7 @@ const RegistrationForm = ({ onHideForms }) => {
   } = useForm({ mode: 'onBlur' })
 
   const dispatch = useDispatch()
-  const { isLoading } = useSelector((state) => state.authData)
+  const { isLoading } = useSelector((state) => state.currentUser)
   const emailError = useEmailError(errors)
 
   const clearErrorHandler = useCallback(() => {

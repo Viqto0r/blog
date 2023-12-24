@@ -9,12 +9,16 @@ export const getAllUsers = createAsyncThunk('users/getAllUsers', () =>
 
 export const changeUserData = createAsyncThunk(
   'users/changeUserData',
-  async ({ uid, newData, currentUser = null }) => {
+  async ({ uid, newData, currentUser = null }, { getState }) => {
     const docRef = doc(db, 'users', uid)
 
-    if (currentUser) {
+    if (currentUser && newData.password) {
       await updatePassword(currentUser, newData.password)
     }
+
+    //if (currentUser && !newData.password) {
+    //  newData.password = getState().currentUser.userData.password
+    //}
 
     await updateDoc(docRef, newData)
 

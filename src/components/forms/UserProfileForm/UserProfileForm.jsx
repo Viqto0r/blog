@@ -1,25 +1,23 @@
-import { memo } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
-import { Button, Drawer, Form, Space } from 'antd'
+import { Button, Form } from 'antd'
 
 import UserDataForm from '../UserDataFields/UserDataFields'
 import _Input from '../_Input/_Input'
+import ErrorMessage from '../ErrorMessage/ErrorMessage'
+import UploadAvatar from '../../UploadAvatar/UploadAvatar'
+import useProfileSubmit from '../../../hooks/useProfileSubmit'
 
 import {
   formItemLayout,
   tailFormItemLayout,
 } from '../UserDataFields/UserDataFields-config'
 
-import ErrorMessage from '../ErrorMessage/ErrorMessage'
-import useProfileSubmit from '../../../hooks/useProfileSubmit'
-
-const UserProfileSettings = ({ open, onClose }) => {
-  const { isLoading } = useSelector((state) => state.usersData)
+const UserProfileForm = () => {
   const { password, phone, country, gender, website, intro } = useSelector(
-    (state) => state.authData.currentUser
+    (state) => state.currentUser.userData
   )
-
   const {
     control,
     getValues,
@@ -27,81 +25,83 @@ const UserProfileSettings = ({ open, onClose }) => {
     setValue,
     setError,
     clearErrors,
+    watch,
     formState: { errors },
   } = useForm({
     mode: 'all',
     defaultValues: { phone, country, gender, website, intro },
   })
-
   const submitHandler = useProfileSubmit(setValue, setError)
+  const { isLoading } = useSelector((state) => state.usersData)
+  const [passwordValidators, setPasswordValidators] = useState(false)
+
+  useEffect(() => {
+    if (watch('oldPassword')) {
+      setPasswordValidators({
+        correctOldPass: (e) => e === password,
+      })
+    } else {
+      setPasswordValidators(false)
+    }
+  }, [watch('oldPassword')])
 
   return (
-    <Drawer
-      title={`Change profile settings`}
-      placement='right'
-      size='large'
-      onClose={onClose}
-      open={open}
-      extra={
-        <Space>
-          <Button
-            type='primary'
-            htmlType='submit'
-            form='profile'
-            loading={isLoading}
-            onClick={() => clearErrors('changeProfile')}
-          >
-            OK
-          </Button>
-        </Space>
-      }
+    <Form
+      {...formItemLayout}
+      name='profile'
+      onFinish={handleSubmit(submitHandler)}
+      initialValues={{
+        prefix: '7',
+      }}
+      style={{
+        maxWidth: 600,
+      }}
+      scrollToFirstError
     >
-      <Form
-        {...formItemLayout}
-        name='profile'
-        onFinish={handleSubmit(submitHandler)}
-        initialValues={{
-          prefix: '7',
+      <Form.Item {...tailFormItemLayout}>
+        <UploadAvatar />
+      </Form.Item>
+
+      <_Input
+        control={control}
+        type='password'
+        name='oldPassword'
+        label='Old password'
+        error={errors.oldPassword}
+        errorMessage='Incorrect password'
+        status={errors.oldPassword && 'error'}
+        rules={{
+          required: passwordValidators,
+          validate: passwordValidators,
         }}
-        style={{
-          maxWidth: 600,
+        placeholder={'Old password'}
+      />
+      <UserDataForm
+        control={control}
+        errors={errors}
+        getValues={getValues}
+        errorMessages={{
+          password: 'The new password must be different from the old one',
         }}
-        scrollToFirstError
-      >
-        <>
-          <_Input
-            control={control}
-            type='password'
-            name='oldPassword'
-            label='Old password'
-            error={errors.oldPassword}
-            errorMessage='Incorrect password'
-            status={errors.oldPassword && 'error'}
-            rules={{
-              required: true,
-              validate: {
-                correctOldPass: (e) => e === password,
-              },
-            }}
-            placeholder={'Old password'}
-          />
-          <UserDataForm
-            control={control}
-            errors={errors}
-            getValues={getValues}
-            errorMessages={{
-              password: 'The new password must be different from the old one',
-            }}
-          />
-          {errors.changeProfile && (
-            <Form.Item {...tailFormItemLayout}>
-              <ErrorMessage errorMessage={errors.changeProfile.message} />
-            </Form.Item>
-          )}
-        </>
-      </Form>
-    </Drawer>
+        requiredPasswords={passwordValidators}
+      />
+
+      <Form.Item {...tailFormItemLayout}>
+        <Button
+          type='primary'
+          htmlType='submit'
+          form='profile'
+          loading={isLoading}
+          onClick={() => clearErrors('changeProfile')}
+        >
+          OK
+        </Button>
+        {errors.changeProfile && (
+          <ErrorMessage errorMessage={errors.changeProfile.message} />
+        )}
+      </Form.Item>
+    </Form>
   )
 }
 
-export default memo(UserProfileSettings)
+export default memo(UserProfileForm)

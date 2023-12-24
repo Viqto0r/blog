@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { changeUserData } from '../store/slices/usersSlice'
-import { changeCurrentUserData } from '../store/slices/authSlice'
+import { changeCurrentUserData } from '../store/slices/currentUserSlice'
 import { auth } from '../api/firebaseApi'
 
 const useProfileSubmit = (setValue, setError) => {
@@ -19,9 +19,9 @@ const useProfileSubmit = (setValue, setError) => {
     ...otherData
   }) => {
     try {
-      const newData = {
-        password,
-        ...otherData,
+      const newData = { ...otherData }
+      if (password) {
+        newData.password = password
       }
 
       await dispatch(

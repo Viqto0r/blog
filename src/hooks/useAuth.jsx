@@ -1,6 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { auth } from '../api/firebaseApi'
-import { getCurrentUser } from '../store/slices/authSlice'
+import { getCurrentUser } from '../store/slices/currentUserSlice'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useCallback, useState } from 'react'
 

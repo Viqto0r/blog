@@ -2,7 +2,7 @@ import { Form, Checkbox } from 'antd'
 import { Controller } from 'react-hook-form'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import { memo } from 'react'
-import { tailFormItemLayout } from '../RegistrationForm/RegistrationForm-config'
+import { tailFormItemLayout } from '../UserDataFields/UserDataFields-config'
 
 const _Checkbox = ({
   name,

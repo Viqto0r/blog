@@ -2,14 +2,16 @@ import { memo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dropdown, Space } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
-import { items } from './UserProfileMenu-config'
 import { Link } from 'react-router-dom'
 import { logout } from '../../store/slices/authSlice'
 import { convertEmailToNickname } from '../../utils/utils'
+import UserProfileForm from '../forms/UserProfileForm/UserProfileForm'
+import useProfileSettings from '../../hooks/useProfileSettings'
 
 const UserProfileMenu = () => {
   const dispatch = useDispatch()
   const { email, role } = useSelector((state) => state.authData.currentUser)
+  const { showProfileSettings, toggleProfileSettings } = useProfileSettings()
 
   const logoutHandler = async () => {
     dispatch(logout())
@@ -29,7 +31,11 @@ const UserProfileMenu = () => {
       <Dropdown
         menu={{
           items: [
-            ...items,
+            {
+              key: '1',
+              label: 'Settings',
+              onClick: toggleProfileSettings,
+            },
             adminPanelBtn,
             {
               key: '3',
@@ -47,6 +53,11 @@ const UserProfileMenu = () => {
           </Space>
         </a>
       </Dropdown>
+
+      <UserProfileForm
+        open={showProfileSettings}
+        onClose={toggleProfileSettings}
+      />
     </>
   )
 }

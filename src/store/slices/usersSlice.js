@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { db, getCollection } from '../../api/firebaseApi'
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { updatePassword } from 'firebase/auth'
 
 export const getAllUsers = createAsyncThunk('users/getAllUsers', () =>
   getCollection('users')
@@ -8,12 +9,17 @@ export const getAllUsers = createAsyncThunk('users/getAllUsers', () =>
 
 export const changeUserData = createAsyncThunk(
   'users/changeUserData',
-  async ({ uid, key, value }) => {
+  async ({ uid, newData, currentUser = null }) => {
     const docRef = doc(db, 'users', uid)
-    const newData = { [key]: value }
+
+    if (currentUser) {
+      await updatePassword(currentUser, newData.password)
+    }
+
     await updateDoc(docRef, newData)
 
     const docSnap = await getDoc(docRef)
+
     return { user: docSnap.data(), newData }
   }
 )

@@ -7,6 +7,7 @@ import {
   getDocs,
   getFirestore,
 } from 'firebase/firestore'
+import { getStorage } from 'firebase/storage'
 import { BannedError } from '../utils/errors'
 
 const firebaseConfig = {
@@ -22,6 +23,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig)
 export const auth = getAuth()
 export const db = getFirestore(firebaseApp)
+export const storage = getStorage(firebaseApp)
 
 export const getCollection = async (collectionName) => {
   const querySnapshot = await getDocs(collection(db, collectionName))

@@ -5,8 +5,6 @@ import { useDispatch } from 'react-redux'
 import { changeUserData, deleteUser } from '../store/slices/usersSlice'
 
 const renderHeader = ({ uid, banned }, dispatch) => {
-  console.log(uid)
-  console.log(banned)
   return [
     {
       key: '1',
@@ -16,19 +14,19 @@ const renderHeader = ({ uid, banned }, dispatch) => {
           key: '1-1',
           label: 'user',
           onClick: () =>
-            dispatch(changeUserData({ uid, key: 'role', value: 'user' })),
+            dispatch(changeUserData({ uid, newData: { role: 'user' } })),
         },
         {
           key: '1-2',
           label: 'editor',
           onClick: () =>
-            dispatch(changeUserData({ uid, key: 'role', value: 'editor' })),
+            dispatch(changeUserData({ uid, newData: { role: 'editor' } })),
         },
         {
           key: '1-3',
           label: 'admin',
           onClick: () =>
-            dispatch(changeUserData({ uid, key: 'role', value: 'admin' })),
+            dispatch(changeUserData({ uid, newData: { role: 'admin' } })),
         },
         ,
       ],
@@ -38,7 +36,7 @@ const renderHeader = ({ uid, banned }, dispatch) => {
       key: '2',
       label: banned ? 'Unban' : 'Ban',
       onClick: () =>
-        dispatch(changeUserData({ uid, key: 'banned', value: !banned })),
+        dispatch(changeUserData({ uid, newData: { banned: !banned } })),
     },
     {
       key: '3',

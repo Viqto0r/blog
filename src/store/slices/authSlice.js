@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore'
 
 const initialState = {
   currentUser: {
@@ -65,7 +65,11 @@ const errorHandler = (state, { error }) => {
 export const authSlice = createSlice({
   name: 'currentUser',
   initialState,
-  reducers: {},
+  reducers: {
+    changeCurrentUserData: (state, { payload }) => {
+      state.currentUser = { ...state.currentUser, ...payload }
+    },
+  },
 
   extraReducers(builder) {
     builder
@@ -98,5 +102,6 @@ export const authSlice = createSlice({
       })
   },
 })
+export const { changeCurrentUserData } = authSlice.actions
 
 export default authSlice.reducer

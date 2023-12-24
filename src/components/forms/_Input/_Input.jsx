@@ -18,6 +18,7 @@ const _Input = ({
   addonTextBefore,
   status,
   onFocus,
+  //defaultValue = '',
 }) => {
   const errorField = error ? <ErrorMessage errorMessage={errorMessage} /> : null
   const addonBefore = addonTextBefore ? (
@@ -38,6 +39,7 @@ const _Input = ({
               prefix={prefix}
               addonBefore={addonBefore}
               onFocus={onFocus}
+              //defaultValue={defaultValue}
               {...field}
             />
             {errorField}

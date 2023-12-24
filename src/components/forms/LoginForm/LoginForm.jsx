@@ -9,7 +9,6 @@ import _Input from '../../forms/_Input/_Input'
 
 import { emailPattern } from '../validationPatterns'
 import { login } from '../../../store/slices/authSlice'
-import { BannedError } from '../../../utils/errors'
 
 const LoginForm = ({ onShowForm, onHideForms }) => {
   const dispatch = useDispatch()

@@ -15,7 +15,6 @@ const _Select = ({
   showSearch = false,
   styles,
   options,
-  //defaultValue,
 }) => {
   const errorField = error ? <ErrorMessage errorMessage={errorMessage} /> : null
   let filterParams = {}
@@ -45,7 +44,6 @@ const _Select = ({
               optionFilterProp='children'
               options={options}
               status={errorField && 'error'}
-              //defaultValue={defaultValue}
               {...filterParams}
               {...field}
             />

@@ -7,7 +7,14 @@ import {
   getDocs,
   getFirestore,
 } from 'firebase/firestore'
-import { getStorage } from 'firebase/storage'
+import {
+  deleteObject,
+  getBlob,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from 'firebase/storage'
 import { BannedError } from '../utils/errors'
 
 const firebaseConfig = {
@@ -51,4 +58,30 @@ export const getUserByUid = async (uid) => {
   }
 
   return user
+}
+
+export const sendFile = async (key, file, metaData) => {
+  const storageRef = ref(storage, `${key}/${file.name}`)
+  await uploadBytes(storageRef, file, metaData)
+
+  return storageRef.fullPath
+}
+
+export const getFile = async (path) => {
+  if (!path) return ''
+  const storageRef = ref(storage, path)
+  const blob = await getBlob(storageRef)
+  return blob
+}
+
+export const getUrl = async (path) => {
+  if (!path) return ''
+  const storageRef = ref(storage, path)
+  const url = await getDownloadURL(storageRef)
+  return url
+}
+
+export const deleteFile = async (path) => {
+  const storageRef = ref(storage, path)
+  await deleteObject(storageRef)
 }

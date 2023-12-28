@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { Form, Input } from 'antd'
 import { Controller } from 'react-hook-form'
 
@@ -18,12 +18,14 @@ const _Input = ({
   addonTextBefore,
   status,
   onFocus,
-  //defaultValue = '',
 }) => {
   const errorField = error ? <ErrorMessage errorMessage={errorMessage} /> : null
   const addonBefore = addonTextBefore ? (
     <Form.Item noStyle>{addonTextBefore}</Form.Item>
   ) : null
+
+  const inputProps = { type, status, placeholder, prefix, addonBefore, onFocus }
+  const Field = type === 'password' ? Input.Password : Input
 
   return (
     <Form.Item label={label} required={rules.required} tooltip={tooltip}>
@@ -32,16 +34,7 @@ const _Input = ({
         name={name}
         render={({ field }) => (
           <>
-            <Input
-              type={type}
-              status={status}
-              placeholder={placeholder}
-              prefix={prefix}
-              addonBefore={addonBefore}
-              onFocus={onFocus}
-              //defaultValue={defaultValue}
-              {...field}
-            />
+            {<Field {...inputProps} {...field} />}
             {errorField}
           </>
         )}

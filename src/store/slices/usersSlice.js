@@ -1,7 +1,30 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { db, getCollection } from '../../api/firebaseApi'
+import { db, deleteFile, getCollection, sendFile } from '../../api/firebaseApi'
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { updatePassword } from 'firebase/auth'
+
+const changeImageName = (img, uid) => {
+  const newName = img.name.replace(/.+(?=\.(png|svg|jpe?g|gif)$)/, uid)
+  return new File([img], newName)
+}
+
+const changeAvatar = async (newData, uid, { avatar }) => {
+  if (newData.avatar) {
+    newData.avatar = changeImageName(newData.avatar, uid)
+    newData.avatar = await sendFile('avatars', newData.avatar, {
+      contentType: 'image/png',
+    })
+  }
+  if (avatar) {
+    await deleteFile(avatar)
+  }
+}
+
+const changePassword = async (currentUser, { password }) => {
+  if (currentUser && password) {
+    await updatePassword(currentUser, password)
+  }
+}
 
 export const getAllUsers = createAsyncThunk('users/getAllUsers', () =>
   getCollection('users')
@@ -11,14 +34,11 @@ export const changeUserData = createAsyncThunk(
   'users/changeUserData',
   async ({ uid, newData, currentUser = null }, { getState }) => {
     const docRef = doc(db, 'users', uid)
-
-    if (currentUser && newData.password) {
-      await updatePassword(currentUser, newData.password)
-    }
-
-    //if (currentUser && !newData.password) {
-    //  newData.password = getState().currentUser.userData.password
+    await changePassword(currentUser, newData)
+    //if (currentUser && newData.password) {
+    //  await updatePassword(currentUser, newData.password)
     //}
+    await changeAvatar(newData, uid, getState().currentUser.userData)
 
     await updateDoc(docRef, newData)
 

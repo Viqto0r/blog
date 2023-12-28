@@ -5,10 +5,10 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore'
 
 const initialState = {
-  currentUser: {
+  userData: {
     email: null,
     role: 'guest',
   },
@@ -62,10 +62,14 @@ const errorHandler = (state, { error }) => {
   state.errorMessage = error.message
 }
 
-export const authSlice = createSlice({
+export const currentUserSlice = createSlice({
   name: 'currentUser',
   initialState,
-  reducers: {},
+  reducers: {
+    changeCurrentUserData: (state, { payload }) => {
+      state.userData = { ...state.userData, ...payload }
+    },
+  },
 
   extraReducers(builder) {
     builder
@@ -87,7 +91,7 @@ export const authSlice = createSlice({
       .addCase(getCurrentUser.rejected, errorHandler)
       .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
         state.isLoading = false
-        state.currentUser = payload
+        state.userData = payload
       })
 
     builder
@@ -98,5 +102,6 @@ export const authSlice = createSlice({
       })
   },
 })
+export const { changeCurrentUserData } = currentUserSlice.actions
 
-export default authSlice.reducer
+export default currentUserSlice.reducer

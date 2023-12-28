@@ -8,14 +8,13 @@ import _Select from '../_Select/_Select'
 import _Checkbox from '../_Checkbox/_Checkbox'
 import useEmailError from '../../../hooks/useEmailError'
 
-import { registerUser } from '../../../store/slices/authSlice'
+import { registerUser } from '../../../store/slices/currentUserSlice'
 import {
-  countries,
   formItemLayout,
-  genders,
   tailFormItemLayout,
-} from './RegistrationForm-config'
-import { emailPattern, passwordPattern } from '../validationPatterns'
+} from '../UserDataFields/UserDataFields-config'
+import { emailPattern } from '../validationPatterns'
+import UserDataFields from '../UserDataFields/UserDataFields'
 
 const RegistrationForm = ({ onHideForms }) => {
   const {
@@ -28,7 +27,7 @@ const RegistrationForm = ({ onHideForms }) => {
   } = useForm({ mode: 'onBlur' })
 
   const dispatch = useDispatch()
-  const { isLoading } = useSelector((state) => state.authData)
+  const { isLoading } = useSelector((state) => state.currentUser)
   const emailError = useEmailError(errors)
 
   const clearErrorHandler = useCallback(() => {
@@ -50,7 +49,6 @@ const RegistrationForm = ({ onHideForms }) => {
       })
     }
   }
-
   return (
     <Form
       {...formItemLayout}
@@ -80,84 +78,15 @@ const RegistrationForm = ({ onHideForms }) => {
         }}
         placeholder={'Email'}
       />
-
-      <_Input
+      <UserDataFields
         control={control}
-        type='password'
-        name='password'
-        label='Password'
-        error={errors.password}
-        errorMessage='Password must contain minimum 6 characters, at least one
-                uppercase letter, one lowercase letter and one number.'
-        status={errors.password && 'error'}
-        rules={{
-          required: true,
-          //pattern: passwordPattern,
-          validate: { notEmpty: (e) => e !== undefined },
-        }}
-        placeholder={'Password'}
-      />
-      <_Input
-        control={control}
-        type='password'
-        name='confirm'
-        label='Password'
-        error={errors.confirm}
-        errorMessage='Passwords mismatch'
-        rules={{
-          required: true,
-          validate: {
-            match: (e) => e === getValues('password'),
-          },
-        }}
-        placeholder={'Confirm password'}
-      />
-      <_Select
-        control={control}
-        name='gender'
-        error={errors.gender}
-        errorMessage='Please select gender'
-        label='Gender'
-        options={genders}
-        rules={{
-          required: true,
-          validate: {
-            match: (e) => e === getValues('gender'),
-          },
+        errors={errors}
+        getValues={getValues}
+        errorMessages={{
+          password:
+            'Password must contain minimum 6 characters, at least one uppercase letter, one lowercase letter and one number.',
         }}
       />
-      <_Select
-        control={control}
-        name='country'
-        label='Country'
-        error={errors.country}
-        errorMessage='Please select your country!'
-        options={countries}
-        showSearch={true}
-        placeholder='Search your country'
-        styles={{ width: 200 }}
-        rules={{
-          required: true,
-          validate: { notEmpty: (e) => e !== undefined },
-        }}
-      />
-      <_Input
-        type='number'
-        name='phone'
-        control={control}
-        error={errors.phone}
-        errorMessage='Invalid phone'
-        label='Phone'
-        rules={{
-          required: true,
-          pattern: /\d{10}/,
-          validate: { notEmpty: (e) => e !== undefined },
-        }}
-        placeholder={'Phone'}
-        addonTextBefore='+7'
-      />
-      <_Input name='website' label='Website' control={control} />
-      <_Input name='intro' label='Intro' control={control} />
 
       <_Checkbox
         control={control}

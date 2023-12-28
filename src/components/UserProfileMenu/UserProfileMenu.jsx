@@ -1,15 +1,22 @@
 import { memo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Dropdown, Space } from 'antd'
+import { Avatar, Dropdown, Space } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
-import { items } from './UserProfileMenu-config'
 import { Link } from 'react-router-dom'
-import { logout } from '../../store/slices/authSlice'
+
+import { logout } from '../../store/slices/currentUserSlice'
 import { convertEmailToNickname } from '../../utils/utils'
+import useProfileSettings from '../../hooks/useProfileSettings'
+import UserProfilePanel from '../UserProfilePanel/UserProfilePanel'
+import useImgSrc from '../../hooks/useImgSrc'
 
 const UserProfileMenu = () => {
   const dispatch = useDispatch()
-  const { email, role } = useSelector((state) => state.authData.currentUser)
+  const { email, role, avatar } = useSelector(
+    (state) => state.currentUser.userData
+  )
+  const avatarSrc = useImgSrc(avatar)
+  const { showProfileSettings, toggleProfileSettings } = useProfileSettings()
 
   const logoutHandler = async () => {
     dispatch(logout())
@@ -29,7 +36,11 @@ const UserProfileMenu = () => {
       <Dropdown
         menu={{
           items: [
-            ...items,
+            {
+              key: '1',
+              label: 'Settings',
+              onClick: toggleProfileSettings,
+            },
             adminPanelBtn,
             {
               key: '3',
@@ -42,11 +53,17 @@ const UserProfileMenu = () => {
       >
         <a onClick={(e) => e.preventDefault()} style={{ cursor: 'pointer' }}>
           <Space>
+            <Avatar children={role} size='large' src={avatarSrc} />
             {convertEmailToNickname(email)}
             <DownOutlined />
           </Space>
         </a>
       </Dropdown>
+
+      <UserProfilePanel
+        open={showProfileSettings}
+        onClose={toggleProfileSettings}
+      />
     </>
   )
 }

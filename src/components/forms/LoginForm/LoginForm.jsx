@@ -8,12 +8,11 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import _Input from '../../forms/_Input/_Input'
 
 import { emailPattern } from '../validationPatterns'
-import { login } from '../../../store/slices/authSlice'
-import { BannedError } from '../../../utils/errors'
+import { login } from '../../../store/slices/currentUserSlice'
 
 const LoginForm = ({ onShowForm, onHideForms }) => {
   const dispatch = useDispatch()
-  const { isLoading } = useSelector((state) => state.authData)
+  const { isLoading } = useSelector((state) => state.currentUser)
   const {
     handleSubmit,
     control,

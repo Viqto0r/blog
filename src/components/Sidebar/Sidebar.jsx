@@ -4,7 +4,6 @@ import { Menu } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 
 const siderStyle = {
-  textAlign: 'center',
   lineHeight: '120px',
   backgroundColor: '#FFFFFF',
   width: '10%',

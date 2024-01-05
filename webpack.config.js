@@ -16,17 +16,19 @@ module.exports = ({ mode = DEVELOPMENT }) => {
   }
 
   const getFileName = (ext) => {
-    return `[name]${isDev ? '[hash:8]' : ''}-build.${ext}`
+    return `[name]${isProd ? '[hash:8]' : ''}-build.${ext}`
   }
 
   return {
     mode,
     entry: `/src/main.jsx`,
+
     devtool: isDev ? 'source-map' : false,
 
     output: {
       filename: getFileName('js'),
       path: path.resolve(__dirname, './dist'),
+      publicPath: '/',
       clean: true,
     },
     resolve: {

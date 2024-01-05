@@ -10,6 +10,7 @@ import _Footer from '../../components/_Footer/_Footer'
 import _Modal from '../../components/_Modal/_Modal'
 
 import { userPageMenuOptions } from '../../components/Sidebar/Sidebar-config'
+import { Outlet } from 'react-router-dom'
 
 const layoutStyle = {
   overflow: 'hidden',

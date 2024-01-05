@@ -3,4 +3,9 @@ export const capitalize = (str) => {
   return str[0].toUpperCase() + str.slice(1)
 }
 
-export const convertEmailToNickname = (email) => email.match(/^.+(?=@)/)
+export const convertEmailToNickname = (email) => {
+  if (!email) return ''
+  return email.match(/^.+(?=@)/)[0]
+}
+
+export const getLastPath = (url) => url.replace(/.+\/(?=.+)/, '')

@@ -3,6 +3,7 @@ import { getFile } from '../api/firebaseApi'
 
 const useImgSrc = (path) => {
   const [imgSrc, setImgSrc] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const getSrc = async () => {
@@ -10,6 +11,7 @@ const useImgSrc = (path) => {
         setImgSrc('')
         return
       }
+
       const blob = await getFile(path)
       const src = URL.createObjectURL(blob)
       setImgSrc(src)
@@ -17,7 +19,7 @@ const useImgSrc = (path) => {
     getSrc()
   }, [path])
 
-  return imgSrc
+  return [imgSrc, loading, setLoading]
 }
 
 export default useImgSrc

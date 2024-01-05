@@ -35,9 +35,7 @@ export const changeUserData = createAsyncThunk(
   async ({ uid, newData, currentUser = null }, { getState }) => {
     const docRef = doc(db, 'users', uid)
     await changePassword(currentUser, newData)
-    //if (currentUser && newData.password) {
-    //  await updatePassword(currentUser, newData.password)
-    //}
+
     await changeAvatar(newData, uid, getState().currentUser.userData)
 
     await updateDoc(docRef, newData)

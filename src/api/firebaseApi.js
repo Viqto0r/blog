@@ -6,6 +6,8 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  query,
+  where,
 } from 'firebase/firestore'
 import {
   deleteObject,
@@ -32,8 +34,14 @@ export const auth = getAuth()
 export const db = getFirestore(firebaseApp)
 export const storage = getStorage(firebaseApp)
 
-export const getCollection = async (collectionName) => {
-  const querySnapshot = await getDocs(collection(db, collectionName))
+export const getCollection = async (collectionName, { key, value } = {}) => {
+  const q =
+    key && value
+      ? query(collection(db, collectionName), where(key, '==', value))
+      : collection(db, collectionName)
+
+  const querySnapshot = await getDocs(q)
+
   const allData = []
 
   querySnapshot.forEach((doc) => {
@@ -44,20 +52,21 @@ export const getCollection = async (collectionName) => {
   return allData
 }
 
-export const getUserByUid = async (uid) => {
-  const docRef = doc(db, 'users', uid)
+export const getDocByUid = async (docName, uid) => {
+  if (!uid) return
+  const docRef = doc(db, docName, uid)
   const docSnap = await getDoc(docRef)
   if (!docSnap.exists()) {
-    throw new Error('User is not found')
+    throw new Error(docName + ' is not found')
   }
 
-  const user = docSnap.data()
+  const document = docSnap.data()
 
-  if (user.banned) {
+  if (document.banned) {
     throw new BannedError('User was banned')
   }
 
-  return user
+  return document
 }
 
 export const sendFile = async (key, file, metaData) => {
@@ -76,6 +85,7 @@ export const getFile = async (path) => {
 
 export const getUrl = async (path) => {
   if (!path) return ''
+  console.log(path)
   const storageRef = ref(storage, path)
   const url = await getDownloadURL(storageRef)
   return url

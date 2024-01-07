@@ -8,7 +8,7 @@ const useImgSrc = (path) => {
   useEffect(() => {
     const getSrc = async () => {
       if (!path) {
-        setImgSrc('')
+        setImgSrc(null) // Если ошибки с картинками изменить на ""
         return
       }
 

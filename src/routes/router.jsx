@@ -1,13 +1,11 @@
-import { Outlet, createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 
 import AdminPage from '../pages/AdminPage/AdminPage'
 import UserPage from '../pages/UserPage/UserPage'
-import UserPageMain from '../components/Main/UserPageMain/UserPageMain'
-import Main from '../components/Main/Main'
-import ArticlesList from '../components/ArticlesList/ArticlesLIst'
 import ArticlePage from '../pages/ArticlePage/ArticlePage'
+import ArticleCardsList from '../components/Article/ArticleCardsList/ArticlesCardList'
 
-// Сделать страницу статьи
+ArticleCardsList
 
 const router = createBrowserRouter([
   {
@@ -16,7 +14,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: ':categories?',
-        element: <ArticlesList />,
+        element: <ArticleCardsList />,
       },
       {
         path: 'article/:uid',

@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom'
 import { logout } from '../../store/slices/currentUserSlice'
 import useProfileSettings from '../../hooks/useProfileSettings'
 import UserProfilePanel from '../UserProfilePanel/UserProfilePanel'
-import useImgSrc from '../../hooks/useImgSrc'
 import UserAvatar from '../UserAvatar/UserAvatar'
 
 const UserProfileMenu = () => {
@@ -15,7 +14,6 @@ const UserProfileMenu = () => {
   const { email, role, avatar } = useSelector(
     (state) => state.currentUser.userData
   )
-  const [avatarSrc] = useImgSrc(avatar)
   const { showProfileSettings, toggleProfileSettings } = useProfileSettings()
 
   const logoutHandler = async () => {
@@ -53,12 +51,7 @@ const UserProfileMenu = () => {
       >
         <a onClick={(e) => e.preventDefault()} style={{ cursor: 'pointer' }}>
           <Space>
-            <UserAvatar
-              role={role}
-              size='large'
-              src={avatarSrc}
-              email={email}
-            />
+            <UserAvatar role={role} size='large' src={avatar} email={email} />
             <DownOutlined />
           </Space>
         </a>

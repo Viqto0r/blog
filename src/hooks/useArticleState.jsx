@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { getDocByUid } from '../api/firebaseApi'
 import { getLastPath } from '../utils/utils'
 
-const useArticle = () => {
+const useArticleState = () => {
   const { state, pathname } = useLocation()
   const [article, setArticle] = useState({})
 
@@ -20,4 +20,4 @@ const useArticle = () => {
   return article
 }
 
-export default useArticle
+export default useArticleState

@@ -1,11 +1,14 @@
 import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { Card, Space } from 'antd'
+import { StarFilled } from '@ant-design/icons'
+
 import _Image from '../../_Image/_Image'
 
 import UserAvatar from '../../UserAvatar/UserAvatar'
 
 import { capitalize } from '../../../utils/utils'
+import Rate from '../../Rate/Rate'
 
 const ArticleCard = ({
   uid,
@@ -46,7 +49,21 @@ const ArticleCard = ({
       }
     >
       <Card.Meta
-        description={capitalize(category)}
+        description={
+          <Rate
+            rate={likes.length - dislikes.length}
+            prefix={
+              <StarFilled
+                style={{
+                  color: '#f16a26',
+                  position: 'relative',
+                  top: '1px',
+                  fontSize: '26px',
+                }}
+              />
+            }
+          />
+        }
         avatar={
           <Space>
             <UserAvatar
@@ -57,6 +74,7 @@ const ArticleCard = ({
             {new Date(+createDate).toLocaleDateString()}
           </Space>
         }
+        title={capitalize(category)}
       ></Card.Meta>
     </Card>
   )

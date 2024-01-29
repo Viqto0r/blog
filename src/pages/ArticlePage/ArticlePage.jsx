@@ -9,6 +9,7 @@ import {
 } from '../../store/slices/currentArticleSlice'
 import { memo } from 'react'
 import { getCurrentUserSelector } from '../../store/slices/currentUserSlice'
+import Rate from '../../components/Rate/Rate'
 
 const updateRate = async (rateType1, rateType2, userUid) => {
   let newRateType1 = [...rateType1]
@@ -27,15 +28,19 @@ const updateRate = async (rateType1, rateType2, userUid) => {
 const ArticlePage = () => {
   const dispatch = useDispatch()
   useArticleState()
-  const article = useSelector(getCurrentArticleSelector)
-  console.log(article)
+  const {
+    likes = [],
+    dislikes = [],
+    uid,
+    title,
+    img,
+    text,
+  } = useSelector(getCurrentArticleSelector)
 
   const { uid: userUid } = useSelector(getCurrentUserSelector)
 
   const like = async () => {
     try {
-      const { likes, dislikes, uid } = article
-
       const [newLikes, newDislikes] = await updateRate(likes, dislikes, userUid)
       dispatch(
         updateCurrentArticle({
@@ -50,13 +55,12 @@ const ArticlePage = () => {
 
   const dislike = async () => {
     try {
-      const { likes, dislikes } = article
       const [newDislikes, newLikes] = await updateRate(dislikes, likes, userUid)
 
       dispatch(
         updateCurrentArticle({
           newData: { likes: newLikes, dislikes: newDislikes },
-          uid: article.uid,
+          uid,
         })
       )
     } catch (e) {
@@ -66,35 +70,37 @@ const ArticlePage = () => {
 
   return (
     <>
-      <Typography.Title>{article.title}</Typography.Title>
-      <_Image path={article.img} />
-      <Typography.Paragraph>{article.text}</Typography.Paragraph>
+      <Typography.Title>{title}</Typography.Title>
+      <_Image path={img} />
+      <Typography.Paragraph>{text}</Typography.Paragraph>
       {userUid && (
-        <Flex justify='end' style={{ padding: '0 40px' }}>
-          <>
-            <Button
-              icon={
-                <LikeOutlined
-                  style={{
-                    color: article.likes?.includes(userUid) ? 'green' : 'black',
-                  }}
-                />
-              }
-              onClick={like}
-            />
-            <Button
-              icon={
-                <DislikeOutlined
-                  style={{
-                    color: article.dislikes?.includes(userUid)
-                      ? 'red'
-                      : 'black',
-                  }}
-                />
-              }
-              onClick={dislike}
-            />
-          </>
+        <Flex
+          justify='end'
+          align='center'
+          gap='5px'
+          style={{ padding: '0 40px' }}
+        >
+          <Button
+            icon={
+              <LikeOutlined
+                style={{
+                  color: likes?.includes(userUid) ? 'green' : 'black',
+                }}
+              />
+            }
+            onClick={like}
+          />
+          <Rate rate={likes.length - dislikes.length} />
+          <Button
+            icon={
+              <DislikeOutlined
+                style={{
+                  color: dislikes?.includes(userUid) ? 'red' : 'black',
+                }}
+              />
+            }
+            onClick={dislike}
+          />
         </Flex>
       )}
     </>

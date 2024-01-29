@@ -6,11 +6,13 @@ import {
   signOut,
 } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
+import { errorHandler, fetchStartHandler } from '../helpers'
 
 const initialState = {
-  userData: {
+  data: {
     email: null,
     role: 'guest',
+    uid: null,
   },
   isLoading: false,
   isError: false,
@@ -34,40 +36,31 @@ const filterUserData = ({ agreement, confirm, ...rest }) => rest
 export const registerUser = createAsyncThunk(
   'currentUser/registerUser',
   async (userData) => {
-    const filteredUserData = filterUserData(userData)
-
     const { user } = await createUserWithEmailAndPassword(
       auth,
       userData.email,
       userData.password
     )
+    const filteredUserData = filterUserData(userData)
+
     await setDoc(doc(db, 'users', user.uid), filteredUserData)
   }
 )
 
 export const getCurrentUser = createAsyncThunk(
   'currentUser/getCurrentUser',
-  async (uid) => await getDocByUid('users', uid)
+  async (uid) => {
+    const currentUser = await getDocByUid('users', uid)
+    return { ...currentUser, uid }
+  }
 )
-
-const fetchStartHandler = (state) => {
-  state.isLoading = true
-  state.isError = false
-  state.errorMessage = ''
-}
-
-const errorHandler = (state, { error }) => {
-  state.isLoading = false
-  state.isError = true
-  state.errorMessage = error.message
-}
 
 export const currentUserSlice = createSlice({
   name: 'currentUser',
   initialState,
   reducers: {
     changeCurrentUserData: (state, { payload }) => {
-      state.userData = { ...state.userData, ...payload }
+      state.data = { ...state.data, ...payload }
     },
   },
 
@@ -91,7 +84,7 @@ export const currentUserSlice = createSlice({
       .addCase(getCurrentUser.rejected, errorHandler)
       .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
         state.isLoading = false
-        state.userData = payload
+        state.data = payload
       })
 
     builder

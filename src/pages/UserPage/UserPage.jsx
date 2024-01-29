@@ -10,7 +10,6 @@ import _Footer from '../../components/_Footer/_Footer'
 import _Modal from '../../components/_Modal/_Modal'
 
 import { userPageMenuOptions } from '../../components/Sidebar/Sidebar-config'
-import { Outlet } from 'react-router-dom'
 
 const layoutStyle = {
   overflow: 'hidden',
@@ -18,9 +17,9 @@ const layoutStyle = {
 }
 
 const UserPage = () => {
+  //formType: login | registration | null - если нужно скрыть форму
   const [showForm, setShowForm] = useState(null)
 
-  //formType: login | registration | null - если нужно скрыть форму
   const showFormHandler = (formType) => setShowForm(formType)
   const hideFormsHandler = () => setShowForm(null)
 

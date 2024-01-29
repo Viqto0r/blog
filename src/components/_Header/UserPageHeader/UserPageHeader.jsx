@@ -8,7 +8,7 @@ import LoginBtn from '../LoginBtn/LoginBtn'
 const UserPageHeader = ({ onShowForm }) => {
   const {
     isLoading,
-    userData: { role },
+    data: { role },
   } = useSelector((state) => state.currentUser)
 
   const userProfileBtn =

@@ -2,6 +2,9 @@ import { memo } from 'react'
 import { Image, Spin } from 'antd'
 import useImageSrc from '../../hooks/useImgSrc'
 
+// Сделать так, чтобы при открытии статьи картинка не загружклась заново
+// Попробовать передавать картинку через Ref
+
 const _Image = ({ path }) => {
   const [src, loading, setLoading] = useImageSrc(path)
   return (

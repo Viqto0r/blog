@@ -1,32 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { getCollection, getDocByUid } from '../api/firebaseApi'
-
-const addAuthorInArticle = async ({ authorUid, ...article }) => {
-  const { email, role, avatar = '' } = await getDocByUid('users', authorUid)
-
-  return { ...article, author: { email, role, avatar, uid: authorUid } }
-}
+import { useDispatch, useSelector } from 'react-redux'
+import { getArticles } from '../store/slices/articlesSlice'
 
 const useArticles = () => {
-  const [articles, setArticles] = useState()
   const location = useLocation()
-
+  const { data: articles, isLoading } = useSelector(
+    (state) => state.articlesList
+  )
+  const dispatch = useDispatch()
   useEffect(() => {
-    const getCol = async () => {
-      let articles = await getCollection('articles', {
-        key: 'category',
-        value: location.pathname.slice(1),
-      })
-
-      articles = await Promise.all(articles.map(addAuthorInArticle))
-      setArticles(articles)
-    }
-
-    getCol()
+    dispatch(getArticles(location.pathname.slice(1)))
   }, [location])
-
-  return articles
+  return { articles, isLoading }
 }
 
 export default useArticles

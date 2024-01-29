@@ -40,7 +40,7 @@ const UserProfileForm = () => {
     website,
     intro,
     avatar: avatarSrc,
-  } = useSelector((state) => state.currentUser.userData)
+  } = useSelector((state) => state.currentUser.data)
 
   const {
     control,

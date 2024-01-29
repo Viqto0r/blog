@@ -43,12 +43,10 @@ export const getCollection = async (collectionName, { key, value } = {}) => {
   const querySnapshot = await getDocs(q)
 
   const allData = []
-
   querySnapshot.forEach((doc) => {
     const data = { uid: doc.id, ...doc.data() }
     allData.push(data)
   })
-
   return allData
 }
 

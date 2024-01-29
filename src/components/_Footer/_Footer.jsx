@@ -5,6 +5,7 @@ import { Footer } from 'antd/es/layout/layout'
 
 const footerStyle = {
   textAlign: 'center',
+  backgroundColor: 'white',
 }
 
 const _Footer = () => {

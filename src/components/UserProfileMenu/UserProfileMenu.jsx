@@ -11,9 +11,7 @@ import UserAvatar from '../UserAvatar/UserAvatar'
 
 const UserProfileMenu = () => {
   const dispatch = useDispatch()
-  const { email, role, avatar } = useSelector(
-    (state) => state.currentUser.userData
-  )
+  const { email, role, avatar } = useSelector((state) => state.currentUser.data)
   const { showProfileSettings, toggleProfileSettings } = useProfileSettings()
 
   const logoutHandler = async () => {

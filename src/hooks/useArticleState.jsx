@@ -1,22 +1,36 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { getDocByUid } from '../api/firebaseApi'
 import { getLastPath } from '../utils/utils'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  getCurrentArticle,
+  updateCurrentArticle,
+} from '../store/slices/currentArticleSlice'
 
 const useArticleState = () => {
   const { state, pathname } = useLocation()
-  const [article, setArticle] = useState({})
+  const dispatch = useDispatch()
 
   useEffect(() => {
+    console.log('effect ')
     ;(async () => {
-      let article = state
-      if (!article) {
-        article = await getDocByUid('articles', getLastPath(pathname))
+      try {
+        if (!state) {
+          console.log('Захожу по ссылке')
+          const path = getLastPath(pathname)
+          dispatch(getCurrentArticle(path))
+        } else {
+          console.log('Захожу через лист')
+          const { uid, ...newData } = state
+          dispatch(updateCurrentArticle({ newData, uid }))
+        }
+      } catch (e) {
+        console.log(e)
       }
-      setArticle(article)
     })()
   }, [])
-
+  const article = useSelector((state) => state.currentArticle.data)
+  console.log(article)
   return article
 }
 

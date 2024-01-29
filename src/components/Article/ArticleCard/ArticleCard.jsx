@@ -1,12 +1,10 @@
 import { memo } from 'react'
 import { Link } from 'react-router-dom'
-import { Card, Space, Spin } from 'antd'
-import { Image } from 'antd'
+import { Card, Space } from 'antd'
 import _Image from '../../_Image/_Image'
 
 import UserAvatar from '../../UserAvatar/UserAvatar'
 
-import useImageSrc from '../../../hooks/useImgSrc'
 import { capitalize } from '../../../utils/utils'
 
 const ArticleCard = ({
@@ -17,9 +15,11 @@ const ArticleCard = ({
   author,
   img,
   likes,
+  dislikes,
   comments,
   text,
 }) => {
+  console.log('ArticleCard', uid)
   return (
     <Card
       hoverable
@@ -36,6 +36,7 @@ const ArticleCard = ({
             author,
             img,
             likes,
+            dislikes,
             comments,
             text,
           }}

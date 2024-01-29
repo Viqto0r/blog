@@ -18,7 +18,7 @@ const layoutStyle = {
 
 const AdminPage = () => {
   const {
-    userData: { role },
+    data: { role },
     isLoading,
   } = useSelector((state) => state.currentUser)
 

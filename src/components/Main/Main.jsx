@@ -5,6 +5,7 @@ const contentStyle = {
   textAlign: 'center',
   minHeight: 120,
   lineHeight: '120px',
+  overflowY: 'auto',
 }
 
 const Main = ({ children }) => {

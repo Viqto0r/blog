@@ -17,9 +17,12 @@ const usersDataToTable = (users) => {
 const UsersList = () => {
   const columns = useTableColumns()
 
-  const { users, isLoading, isError, errorMessage } = useSelector(
-    (state) => state.usersData
-  )
+  const {
+    data: users,
+    isLoading,
+    isError,
+    errorMessage,
+  } = useSelector((state) => state.usersData)
   const dispatch = useDispatch()
 
   useEffect(() => {

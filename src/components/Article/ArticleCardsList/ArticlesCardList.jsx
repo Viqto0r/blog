@@ -3,7 +3,7 @@ import ArticleCard from '../ArticleCard/ArticleCard'
 import useArticles from '../../../hooks/useArticles'
 
 const ArticleCardsList = () => {
-  const articles = useArticles()
+  const { articles, isLoading } = useArticles()
 
   return (
     <List
@@ -14,6 +14,7 @@ const ArticleCardsList = () => {
         xl: 3,
         xxl: 4,
       }}
+      loading={isLoading}
       style={{ padding: '0 8px' }}
       itemLayout='vertical'
       size='large'

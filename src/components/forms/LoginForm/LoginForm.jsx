@@ -12,7 +12,7 @@ import { login } from '../../../store/slices/currentUserSlice'
 
 const LoginForm = ({ onShowForm, onHideForms }) => {
   const dispatch = useDispatch()
-  const { isLoading } = useSelector((state) => state.currentUser)
+  const isLoading = useSelector((state) => state.currentUser.isLoading)
   const {
     handleSubmit,
     control,

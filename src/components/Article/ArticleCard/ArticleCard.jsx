@@ -19,7 +19,6 @@ const ArticleCard = ({
   comments,
   text,
 }) => {
-  console.log('ArticleCard', uid)
   return (
     <Card
       hoverable

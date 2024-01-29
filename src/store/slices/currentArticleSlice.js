@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit'
 import { errorHandler, fetchStartHandler } from '../helpers'
 import { db, getDocByUid } from '../../api/firebaseApi'
 import { addAuthorInArticle } from './articlesSlice'
@@ -42,7 +42,11 @@ export const updateCurrentArticle = createAsyncThunk(
 const currentArticlesSlice = createSlice({
   name: 'article',
   initialState,
-  reducers: {},
+  reducers: {
+    clearCurrentArticle() {
+      return initialState
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(getCurrentArticle.pending, fetchStartHandler)
@@ -62,5 +66,9 @@ const currentArticlesSlice = createSlice({
       })
   },
 })
-
+export const getCurrentArticleSelector = createSelector(
+  (state) => state.currentArticle,
+  (state) => state.data
+)
+export const { clearCurrentArticle } = currentArticlesSlice.actions
 export default currentArticlesSlice.reducer

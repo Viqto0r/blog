@@ -4,14 +4,17 @@ import { Dropdown, Space } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 
-import { logout } from '../../store/slices/currentUserSlice'
+import {
+  getCurrentUserSelector,
+  logout,
+} from '../../store/slices/currentUserSlice'
 import useProfileSettings from '../../hooks/useProfileSettings'
 import UserProfilePanel from '../UserProfilePanel/UserProfilePanel'
 import UserAvatar from '../UserAvatar/UserAvatar'
 
 const UserProfileMenu = () => {
   const dispatch = useDispatch()
-  const { email, role, avatar } = useSelector((state) => state.currentUser.data)
+  const { email, role, avatar } = useSelector(getCurrentUserSelector)
   const { showProfileSettings, toggleProfileSettings } = useProfileSettings()
 
   const logoutHandler = async () => {

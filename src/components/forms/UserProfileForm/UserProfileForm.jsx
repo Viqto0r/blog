@@ -15,6 +15,8 @@ import {
 } from '../UserDataFields/UserDataFields-config'
 import { getUrl } from '../../../api/firebaseApi'
 import usePasswordValidators from '../../../hooks/usePasswordValidators'
+import { getCurrentUserSelector } from '../../../store/slices/currentUserSlice'
+import { getAllUsersSelector } from '../../../store/slices/usersSlice'
 
 const getDefaultAvatar = async (src) => {
   const url = await getUrl(src)
@@ -40,7 +42,7 @@ const UserProfileForm = () => {
     website,
     intro,
     avatar: avatarSrc,
-  } = useSelector((state) => state.currentUser.data)
+  } = useSelector(getCurrentUserSelector)
 
   const {
     control,
@@ -60,7 +62,7 @@ const UserProfileForm = () => {
     },
   })
 
-  const { isLoading } = useSelector((state) => state.usersData)
+  const isLoading = useSelector((state) => state.currentUser.isLoading)
   const submitProfileHandler = useProfileSubmit(setValue, setError)
   const passwordValidators = usePasswordValidators(password, watch)
   const avatarValue = watch('avatar')

@@ -9,6 +9,7 @@ import _Header from '../../components/_Header/_Header'
 
 import { adminPageMenuOptions } from '../../components/Sidebar/Sidebar-config'
 import AdminPageHeader from '../../components/_Header/AdminPageHeader/AdminPageHeader'
+import { getCurrentUserSelector } from '../../store/slices/currentUserSlice'
 
 const layoutStyle = {
   borderRadius: 8,
@@ -17,10 +18,8 @@ const layoutStyle = {
 }
 
 const AdminPage = () => {
-  const {
-    data: { role },
-    isLoading,
-  } = useSelector((state) => state.currentUser)
+  const { role } = useSelector(getCurrentUserSelector)
+  const isLoading = useSelector((state) => state.isLoading)
 
   if (isLoading) return <Spin fullscreen />
 

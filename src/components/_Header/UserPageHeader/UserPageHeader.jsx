@@ -4,12 +4,11 @@ import { Spin } from 'antd'
 
 import UserProfileMenu from '../../UserProfileMenu/UserProfileMenu'
 import LoginBtn from '../LoginBtn/LoginBtn'
+import { getCurrentUserSelector } from '../../../store/slices/currentUserSlice'
 
 const UserPageHeader = ({ onShowForm }) => {
-  const {
-    isLoading,
-    data: { role },
-  } = useSelector((state) => state.currentUser)
+  const { role } = useSelector(getCurrentUserSelector)
+  const isLoading = useSelector((state) => state.currentUser.isLoading)
 
   const userProfileBtn =
     role === 'guest' ? (

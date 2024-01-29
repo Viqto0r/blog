@@ -3,8 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { LikeOutlined, DislikeOutlined } from '@ant-design/icons'
 import useArticleState from '../../hooks/useArticleState'
 import _Image from '../../components/_Image/_Image'
-import { updateCurrentArticle } from '../../store/slices/currentArticleSlice'
+import {
+  getCurrentArticleSelector,
+  updateCurrentArticle,
+} from '../../store/slices/currentArticleSlice'
 import { memo } from 'react'
+import { getCurrentUserSelector } from '../../store/slices/currentUserSlice'
 
 const updateRate = async (rateType1, rateType2, userUid) => {
   let newRateType1 = [...rateType1]
@@ -22,10 +26,11 @@ const updateRate = async (rateType1, rateType2, userUid) => {
 
 const ArticlePage = () => {
   const dispatch = useDispatch()
-  const article = useArticleState()
-  console.log(article.img)
+  useArticleState()
+  const article = useSelector(getCurrentArticleSelector)
+  console.log(article)
 
-  const { uid: userUid } = useSelector((state) => state.currentUser.data)
+  const { uid: userUid } = useSelector(getCurrentUserSelector)
 
   const like = async () => {
     try {

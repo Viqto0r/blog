@@ -1,7 +1,7 @@
 import { memo, useEffect } from 'react'
 import { Table } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllUsers } from '../../store/slices/usersSlice'
+import { getAllUsers, getAllUsersSelector } from '../../store/slices/usersSlice'
 import useTableColumns from '../../hooks/useTableColumns'
 
 const usersDataToTable = (users) => {
@@ -17,12 +17,9 @@ const usersDataToTable = (users) => {
 const UsersList = () => {
   const columns = useTableColumns()
 
-  const {
-    data: users,
-    isLoading,
-    isError,
-    errorMessage,
-  } = useSelector((state) => state.usersData)
+  const users = useSelector(getAllUsersSelector)
+  const isLoading = useSelector((state) => state.allUsers.isLoading)
+
   const dispatch = useDispatch()
 
   useEffect(() => {

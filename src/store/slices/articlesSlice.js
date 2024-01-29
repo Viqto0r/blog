@@ -1,9 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit'
 import { errorHandler, fetchStartHandler } from '../helpers'
 import { getCollection, getDocByUid } from '../../api/firebaseApi'
 
 export const addAuthorInArticle = async ({ authorUid, uid, ...article }) => {
-  console.log(uid)
   const { email, role, avatar = '' } = await getDocByUid('users', authorUid)
   return { ...article, uid, author: { email, role, avatar, uid: authorUid } }
 }
@@ -23,7 +22,6 @@ export const getArticles = createAsyncThunk(
         key: 'category',
         value: categoryValue,
       })
-      console.log(articles)
       return await Promise.all(
         articles.map((article) => addAuthorInArticle(article))
       )
@@ -45,11 +43,14 @@ const articlesSlice = createSlice({
       .addCase(getArticles.pending, fetchStartHandler)
       .addCase(getArticles.rejected, errorHandler)
       .addCase(getArticles.fulfilled, (state, { payload }) => {
-        console.log(payload)
         state.isLoading = false
         state.data = payload
       })
   },
 })
 
+export const getArticlesSelector = createSelector(
+  (state) => state.articlesList,
+  (state) => state.data
+)
 export default articlesSlice.reducer

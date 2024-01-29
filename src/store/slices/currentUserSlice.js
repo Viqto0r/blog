@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit'
 import { auth, db, getDocByUid } from '../../api/firebaseApi'
 import {
   createUserWithEmailAndPassword,
@@ -95,6 +95,11 @@ export const currentUserSlice = createSlice({
       })
   },
 })
+
+export const getCurrentUserSelector = createSelector(
+  (state) => state.currentUser,
+  (state) => state.data
+)
 export const { changeCurrentUserData } = currentUserSlice.actions
 
 export default currentUserSlice.reducer

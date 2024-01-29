@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit'
 import { db, deleteFile, getCollection, sendFile } from '../../api/firebaseApi'
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { updatePassword } from 'firebase/auth'
@@ -10,9 +10,6 @@ const changeImageName = (img, uid) => {
 }
 
 const changeAvatar = async (newData, uid, { avatar }) => {
-  console.log(newData)
-  console.log(uid)
-  console.log(avatar)
   if (newData.avatar) {
     newData.avatar = changeImageName(newData.avatar, uid)
     newData.avatar = await sendFile('avatars', newData.avatar, {
@@ -103,7 +100,10 @@ export const usersSlice = createSlice({
       })
   },
 })
-
+export const getAllUsersSelector = createSelector(
+  (state) => state.allUsers,
+  (state) => state.data
+)
 export const { setUsers } = usersSlice.actions
 
 export default usersSlice.reducer

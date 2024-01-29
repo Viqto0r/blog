@@ -8,18 +8,22 @@ const ArticleCardsList = () => {
   return (
     <List
       grid={{
-        gutter: 16,
+        gutter: 10,
         md: 1,
         lg: 2,
         xl: 3,
         xxl: 4,
       }}
       loading={isLoading}
-      style={{ padding: '0 8px' }}
+      style={{ padding: '10px' }}
       itemLayout='vertical'
       size='large'
       dataSource={articles}
-      renderItem={(item) => <ArticleCard {...item} />}
+      renderItem={(item) => (
+        <List.Item style={{ padding: '0' }}>
+          <ArticleCard {...item} />
+        </List.Item>
+      )}
     />
   )
 }

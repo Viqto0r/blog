@@ -23,60 +23,61 @@ const ArticleCard = ({
   text,
 }) => {
   return (
-    <Card
-      hoverable
-      description={capitalize(category)}
-      cover={
-        <Link
-          to={`../article/${uid}`}
-          style={{ display: 'block' }}
-          state={{
-            uid,
-            title,
-            createDate,
-            category,
-            author,
-            img,
-            likes,
-            dislikes,
-            comments,
-            text,
-          }}
-        >
-          <Card.Meta title={title} style={{ padding: '10px' }} />
-          <_Image path={img} />
-        </Link>
-      }
+    <Link
+      to={`../article/${uid}`}
+      state={{
+        uid,
+        title,
+        createDate,
+        category,
+        author,
+        img,
+        likes,
+        dislikes,
+        comments,
+        text,
+      }}
     >
-      <Card.Meta
-        description={
-          <Rate
-            rate={likes.length - dislikes.length}
-            prefix={
-              <StarFilled
-                style={{
-                  color: '#f16a26',
-                  position: 'relative',
-                  top: '1px',
-                  fontSize: '26px',
-                }}
-              />
-            }
-          />
+      <Card
+        hoverable
+        description={capitalize(category)}
+        cover={
+          <>
+            <Card.Meta title={title} style={{ padding: '10px' }} />
+            <_Image path={img} />
+          </>
         }
-        avatar={
-          <Space>
-            <UserAvatar
-              role={author.role}
-              src={author.avatar}
-              email={author.email}
+      >
+        <Card.Meta
+          description={
+            <Rate
+              rate={likes.length - dislikes.length}
+              prefix={
+                <StarFilled
+                  style={{
+                    color: '#f16a26',
+                    position: 'relative',
+                    top: '1px',
+                    fontSize: '26px',
+                  }}
+                />
+              }
             />
-            {new Date(+createDate).toLocaleDateString()}
-          </Space>
-        }
-        title={capitalize(category)}
-      ></Card.Meta>
-    </Card>
+          }
+          avatar={
+            <Space>
+              <UserAvatar
+                role={author.role}
+                src={author.avatar}
+                email={author.email}
+              />
+              {new Date(+createDate).toLocaleDateString()}
+            </Space>
+          }
+          title={capitalize(category)}
+        ></Card.Meta>
+      </Card>
+    </Link>
   )
 }
 
